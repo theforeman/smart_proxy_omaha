@@ -1,0 +1,30 @@
+require 'net/http'
+require 'net/https'
+require 'uri'
+
+module Proxy::Omaha
+  module HttpShared
+    def connection_factory(url)
+      uri = URI.parse(url)
+
+      if Proxy::Omaha::Plugin.settings.proxy.to_s.empty?
+        proxy_host = nil
+        proxy_port = nil
+      else
+        proxy = URI.parse(Proxy::Omaha::Plugin.settings.proxy)
+        proxy_host = proxy.host
+        proxy_port = proxy.port
+      end
+
+      http = Net::HTTP.new(uri.host, uri.port, proxy_host, proxy_port)
+
+      if uri.scheme == 'https'
+        http.use_ssl = true
+      end
+
+      request = Net::HTTP::Get.new(uri.request_uri)
+
+      [http, request]
+    end
+  end
+end

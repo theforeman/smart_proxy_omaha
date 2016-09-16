@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response protocol="3.0" server="example.org">
+  <daystart elapsed_seconds="0"/>
+  <app app_id="e96281a6-d1af-4bde-9a0a-97b76e56dc57" status="ok">
+    <updatecheck status="ok">
+      <urls>
+        <url codebase="http://example.org/omahareleases/stable/1122.2.0/"/>
+      </urls>
+      <manifest version="1122.2.0">
+        <packages>
+          <package hash="+ZFmPWzv1OdfmKHaGSojbK5Xj3k=" name="update.gz" size="212555113" required="false"/>
+        </packages>
+        <actions>
+          <action event="postinstall" sha256="cSBzKN0c6vKinrH0SdqUZSHlQtCa90vmeKC7p/xk19M=" needsadmin="false" IsDelta="false" DisablePayloadBackoff="true" ChromeOSVersion=""/>
+        </actions>
+      </manifest>
+    </updatecheck>
+  </app>
+</response>

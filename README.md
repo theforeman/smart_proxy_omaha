@@ -1,0 +1,99 @@
+# Smart Proxy - Omaha
+
+This plug-in adds support for the Omaha Procotol to Foreman's Smart Proxy. It is used when updating CoreOS clusters.
+The Smart Proxy Omaha plugin acts as a mirror for Omaha releases and sends reports to Foreman about the update activity of the managed hosts. It needs the [Foreman Omaha plugin](https://github.com/theforeman/foreman_omaha) installed to work properly.
+
+## How it works
+
+The operatingsystem packages install a cronjob, that runs the binary `smart-proxy-omaha-sync` nightly to sync omaha content from the upstream mirror servers.
+Your CoreOS hosts can then be configured to update against the smart proxy. The proxy then uploads facts and reports to Foreman.
+Omaha content is served directly from the proxy.
+
+## Compatibility
+
+| Foreman Proxy Version | Plugin Version |
+| --------------------- | -------------- |
+| >= 1.12               | any            |
+
+## Installation
+
+To be able to use Foreman for your Omaha updates, you need to install the [Foreman Omaha plugin](https://github.com/theforeman/foreman_omaha), install this smart-proxy plugin and configure your CoreOS hosts.
+
+For the Smart Proxy plugin, follow the [smart-proxy plugin installation instructions](http://projects.theforeman.org/projects/foreman/wiki/How_to_Install_a_Smart-Proxy_Plugin). You usually just need to install the `rubygem-smart_proxy_omaha` package and restart the `foreman-proxy` service.
+
+For the initial sync of releases you need to run the binary `smart-proxy-omaha-sync` as `foreman-proxy` user.
+
+Do not forget to register the smart proxy in Foreman via the user interface.
+
+## Host Configuration
+
+You need to configure your CoreOS hosts to connect to the Omaha smart-proxy for updates. You can either configure your servers manually or use cloud-config.
+
+### Using Config File
+
+Edit `/etc/coreos/update.conf`
+
+```
+GROUP=stable
+SERVER=https://omahaproxy.example.com:8443/omaha/v1/update
+```
+
+Restart update engine
+
+```bash
+sudo systemctl restart update-engine
+```
+
+### Using Cloud-Config
+
+```yaml
+#cloud-config
+coreos:
+  update:
+    group: "stable"
+    server: "https://omahaproxy.example.com:8443/omaha/v1/update"
+```
+
+### Release channels
+
+All three default release channels (alpha, beta, stable) are supported. You cannot define custom channels right now.
+
+### Testing
+
+To test if a client can successfully check for updates, these commands may help:
+
+```bash
+$ update_engine_client -check_for_update
+$ journalctl -u update-engine.service
+```
+
+## Proxy Support
+
+In the settings file you can specify a http proxy that is used to download Omaha content.
+You need to allow https access to these servers:
+
+* alpha.release.core-os.net
+* beta.release.core-os.net
+* stable.release.core-os.net
+* update.release.core-os.net
+
+## Make it High Available
+
+In order to make the Omaha Smart Proxy high available or add additional capacity, just scale out and put a loadbalancer in front of the proxies.
+
+## Copyright
+
+Copyright (c) 2016 The Foreman developers
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
