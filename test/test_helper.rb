@@ -3,6 +3,7 @@ require 'mocha/setup'
 require 'webmock/test_unit'
 require 'mocha/test_unit'
 require 'rack/test'
+require 'test_xml/test_unit'
 
 require 'smart_proxy_for_testing'
 

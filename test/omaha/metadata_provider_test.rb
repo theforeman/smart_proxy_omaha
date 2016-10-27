@@ -14,7 +14,9 @@ class MetadataProviderTest < Test::Unit::TestCase
   end
 
   def test_store
-    File.expects(:write).with('/tmp/stable/1068.9.0/metadata.json', stub_metadata.to_json).returns(true)
+    file_handle = mock('file')
+    file_handle.expects(:write).with(stub_metadata.to_json)
+    File.expects(:open).with('/tmp/stable/1068.9.0/metadata.json', 'w').yields(file_handle).once
     metadata = Proxy::Omaha::Metadata.new(stub_metadata)
     assert @provider.store(metadata)
   end

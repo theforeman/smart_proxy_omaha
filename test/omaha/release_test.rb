@@ -14,7 +14,7 @@ class ReleaseTest < Test::Unit::TestCase
     )
     @release = Proxy::Omaha::Release.new(
       :track => :stable,
-      :version => '1068.9.0',
+      :version => '1068.9.0'
     )
   end
 
@@ -54,11 +54,11 @@ class ReleaseTest < Test::Unit::TestCase
   def test_compare
     older = Proxy::Omaha::Release.new(
       :track => :stable,
-      :version => '100.0.0',
+      :version => '100.0.0'
     )
     newer = Proxy::Omaha::Release.new(
       :track => :stable,
-      :version => '2000.0.0',
+      :version => '2000.0.0'
     )
     assert_equal 0, @release.<=>(@release)
     assert_equal -1, @release.<=>(newer)
@@ -68,7 +68,7 @@ class ReleaseTest < Test::Unit::TestCase
   def test_equality
     other = Proxy::Omaha::Release.new(
       :track => :stable,
-      :version => '100.0.0',
+      :version => '100.0.0'
     )
     assert_equal @release, @release
     refute_equal other, @release
@@ -105,6 +105,6 @@ class ReleaseTest < Test::Unit::TestCase
     assert_equal true, @release.create_path
     assert_equal true, @release.create_metadata
     assert File.exist?(file)
-    assert_equal expected, File.read(file)
+    assert_equal JSON.parse(expected), JSON.parse(File.read(file))
   end
 end

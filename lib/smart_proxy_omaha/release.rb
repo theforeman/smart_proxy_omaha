@@ -67,7 +67,7 @@ module Proxy::Omaha
         :release => version.to_s,
         :size => File.size(updatefile),
         :sha1_b64 => Digest::SHA1.file(updatefile).base64digest,
-        :sha256_b64 => Digest::SHA256.file(updatefile).base64digest,
+        :sha256_b64 => Digest::SHA256.file(updatefile).base64digest
       ))
       true
     rescue

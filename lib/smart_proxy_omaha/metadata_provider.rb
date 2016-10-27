@@ -11,7 +11,10 @@ module Proxy::Omaha
     end
 
     def store(metadata)
-      File.write(metadata_file(metadata.track, metadata.release), metadata.to_json)
+      File.open(metadata_file(metadata.track, metadata.release), 'w') do |file|
+        file.write(metadata.to_json)
+      end
+      true
     end
 
     private

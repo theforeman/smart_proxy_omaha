@@ -8,7 +8,7 @@ class RequestTest < Test::Unit::TestCase
     @request = Proxy::Omaha::OmahaProtocol::Request.new(
       xml_fixture('request_update_complete_update'),
       :ip => '1.1.1.1',
-      :base_url => 'http://www.example.org/',
+      :base_url => 'http://www.example.org/'
     )
   end
 
@@ -68,7 +68,7 @@ class RequestTest < Test::Unit::TestCase
     request6 = Proxy::Omaha::OmahaProtocol::Request.new(
       xml_fixture('request_update_complete_update'),
       :ip => '2001:db8::1',
-      :base_url => 'http://www.example.org/',
+      :base_url => 'http://www.example.org/'
     )
 
     assert_nil request6.ipaddress

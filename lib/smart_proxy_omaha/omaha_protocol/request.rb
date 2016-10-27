@@ -50,7 +50,7 @@ module Proxy::Omaha::OmahaProtocol
 
     def parse_request
       xml_request = Nokogiri::XML(body)
-      @appid = xml_request.xpath('/request/app/@appid').to_s.gsub(/^{?([a-f0-9\-]+)}?$/, '\1')
+      @appid = xml_request.xpath('/request/app/@appid').to_s.tr('{}', '')
       @version = xml_request.xpath('/request/app/@version').to_s
       @osmajor = version.gsub(/^(\d+)\.\d\.\d$/, '\1')
       @osminor = version.gsub(/^\d+\.(\d\.\d)$/, '\1')

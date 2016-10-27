@@ -58,18 +58,18 @@ class OmahaApiTest < Test::Unit::TestCase
   def test_processes_update_complete_noupdate
     post "/v1/update", xml_fixture('request_update_complete_noupdate')
     assert last_response.ok?, "Last response was not ok: #{last_response.status} #{last_response.body}"
-    assert_equal xml_fixture('response_update_complete_noupdate'), last_response.body
+    assert_xml_equal xml_fixture('response_update_complete_noupdate'), last_response.body
   end
 
   def test_processes_update_complete_update
     post "/v1/update", xml_fixture('request_update_complete_update')
     assert last_response.ok?, "Last response was not ok: #{last_response.status} #{last_response.body}"
-    assert_equal xml_fixture('response_update_complete_update'), last_response.body
+    assert_xml_equal xml_fixture('response_update_complete_update'), last_response.body
   end
 
   def test_processes_update_complete_error
     post "/v1/update", xml_fixture('request_update_complete_error')
     assert last_response.ok?, "Last response was not ok: #{last_response.status} #{last_response.body}"
-    assert_equal xml_fixture('response_update_complete_error'), last_response.body
+    assert_xml_equal xml_fixture('response_update_complete_error'), last_response.body
   end
 end
