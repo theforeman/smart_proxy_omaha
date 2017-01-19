@@ -91,6 +91,8 @@ module Proxy::Omaha
       upstream = "https://#{track}.release.core-os.net/#{architecture}/#{version}"
       [
         "#{upstream}/coreos_production_pxe.vmlinuz",
+        "#{upstream}/coreos_production_image.bin.bz2",
+        "#{upstream}/coreos_production_image.bin.bz2.sig",
         "#{upstream}/coreos_production_pxe_image.cpio.gz",
         "https://update.release.core-os.net/#{architecture}/#{version}/update.gz"
       ]

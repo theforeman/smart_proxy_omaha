@@ -85,14 +85,20 @@ class ReleaseTest < Test::Unit::TestCase
 
   def test_download
     stub_request(:get, /.*release\.core-os.*/).to_return(:status => [200, 'OK'], :body => "body")
-    expected = ['coreos_production_pxe.vmlinuz', 'coreos_production_pxe_image.cpio.gz', 'update.gz']
+    expected = [
+      'coreos_production_pxe.vmlinuz',
+      'coreos_production_pxe_image.cpio.gz',
+      'coreos_production_image.bin.bz2',
+      'coreos_production_image.bin.bz2.sig',
+      'update.gz'
+    ]
 
     assert_equal true, @release.create_path
     assert_equal true, @release.download
 
-    expected.each do |f|
-      assert File.exist?(File.join(@release.path, f))
-    end
+    existing_files = Dir.entries(@release.path) - ['.', '..']
+
+    assert_equal expected.sort, existing_files.sort
   end
 
   def test_create_metadata
