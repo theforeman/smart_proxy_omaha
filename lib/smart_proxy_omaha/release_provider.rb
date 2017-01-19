@@ -9,9 +9,11 @@ module Proxy::Omaha
     include HttpShared
 
     attr_accessor :track
+    attr_accessor :architecture
 
     def initialize(options)
       @track = options.fetch(:track)
+      @architecture = options.fetch(:architecture, 'amd64-usr')
     end
 
     def releases
@@ -19,12 +21,12 @@ module Proxy::Omaha
     end
 
     def fetch_releases
-      releases = http_request.get("https://#{track}.release.core-os.net/amd64-usr/")
+      releases = http_request.get("https://#{track}.release.core-os.net/#{architecture}/")
       xml = Nokogiri::HTML(releases)
       parsed = (xml.xpath('//a/text()').map(&:to_s) - ['current']).map do |v|
-        Proxy::Omaha::Release.new(:version => v, :track => track)
+        Proxy::Omaha::Release.new(:version => v, :track => track, :architecture => architecture)
       end.sort
-      logger.debug "Fetched releases for #{track}: #{parsed.map(&:to_s).join(', ')}"
+      logger.debug "Fetched releases for #{architecture}/#{track}: #{parsed.map(&:to_s).join(', ')}"
       parsed
     end
 

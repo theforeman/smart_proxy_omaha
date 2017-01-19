@@ -14,6 +14,7 @@ class ReleaseTest < Test::Unit::TestCase
     )
     @release = Proxy::Omaha::Release.new(
       :track => :stable,
+      :architecture => 'amd64-usr',
       :version => '1068.9.0'
     )
   end
@@ -23,7 +24,7 @@ class ReleaseTest < Test::Unit::TestCase
   end
 
   def test_path
-    assert_equal "#{@contentpath}/stable/1068.9.0", @release.path
+    assert_equal "#{@contentpath}/stable/amd64-usr/1068.9.0", @release.path
   end
 
   def test_exists?
@@ -54,10 +55,12 @@ class ReleaseTest < Test::Unit::TestCase
   def test_compare
     older = Proxy::Omaha::Release.new(
       :track => :stable,
+      :architecture => 'amd64-usr',
       :version => '100.0.0'
     )
     newer = Proxy::Omaha::Release.new(
       :track => :stable,
+      :architecture => 'amd64-usr',
       :version => '2000.0.0'
     )
     assert_equal 0, @release.<=>(@release)
@@ -68,6 +71,7 @@ class ReleaseTest < Test::Unit::TestCase
   def test_equality
     other = Proxy::Omaha::Release.new(
       :track => :stable,
+      :architecture => 'amd64-usr',
       :version => '100.0.0'
     )
     assert_equal @release, @release
@@ -100,7 +104,7 @@ class ReleaseTest < Test::Unit::TestCase
     Digest::SHA1.expects(:file).once.returns(digest)
     Digest::SHA256.expects(:file).once.returns(digest)
 
-    expected = '{"release":"1068.9.0","sha1_b64":"foo","sha256_b64":"foo","size":0,"track":"stable"}'
+    expected = '{"release":"1068.9.0","architecture":"amd64-usr","sha1_b64":"foo","sha256_b64":"foo","size":0,"track":"stable"}'
 
     assert_equal true, @release.create_path
     assert_equal true, @release.create_metadata

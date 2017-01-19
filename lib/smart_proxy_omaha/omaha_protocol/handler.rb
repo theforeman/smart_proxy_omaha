@@ -69,7 +69,7 @@ module Proxy::Omaha::OmahaProtocol
       if !latest_os.nil? && latest_os > Gem::Version.new(request.version)
         Proxy::Omaha::OmahaProtocol::Updateresponse.new(
           :appid => request.appid,
-          :metadata => metadata_provider.get(request.track, latest_os),
+          :metadata => metadata_provider.get(request.track, latest_os, request.board),
           :board => request.board,
           :base_url => request.base_url
         )

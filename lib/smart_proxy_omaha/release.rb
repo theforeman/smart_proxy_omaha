@@ -6,19 +6,20 @@ module Proxy::Omaha
   class Release
     include Proxy::Log
 
-    attr_accessor :track, :version
+    attr_accessor :track, :version, :architecture
 
     def initialize(options)
       @track = options.fetch(:track).to_s
+      @architecture = options.fetch(:architecture)
       @version = Gem::Version.new(options.fetch(:version))
     end
 
     def path
-      @path ||= File.join(Proxy::Omaha::Plugin.settings.contentpath, track, version.to_s)
+      @path ||= File.join(Proxy::Omaha::Plugin.settings.contentpath, track, architecture, version.to_s)
     end
 
     def metadata
-      metadata_provider.get(track, release)
+      metadata_provider.get(track, release, architecture)
     end
 
     def exists?
@@ -30,7 +31,7 @@ module Proxy::Omaha
     end
 
     def create
-      logger.debug "Creating #{track} #{version}"
+      logger.debug "Creating #{track} #{version} #{architecture}"
       return false unless create_path
       return false unless download
       return false unless create_metadata
@@ -43,7 +44,7 @@ module Proxy::Omaha
     end
 
     def ==(other)
-      self.class === other && track == other.track && version == other.version
+      self.class === other && track == other.track && version == other.version && architecture == other.architecture
     end
 
     def to_s
@@ -65,6 +66,7 @@ module Proxy::Omaha
       metadata_provider.store(Metadata.new(
         :track => track,
         :release => version.to_s,
+        :architecture => architecture,
         :size => File.size(updatefile),
         :sha1_b64 => Digest::SHA1.file(updatefile).base64digest,
         :sha256_b64 => Digest::SHA256.file(updatefile).base64digest
@@ -86,11 +88,11 @@ module Proxy::Omaha
     end
 
     def sources
-      upstream = "https://#{track}.release.core-os.net/amd64-usr/#{version}"
+      upstream = "https://#{track}.release.core-os.net/#{architecture}/#{version}"
       [
         "#{upstream}/coreos_production_pxe.vmlinuz",
         "#{upstream}/coreos_production_pxe_image.cpio.gz",
-        "https://update.release.core-os.net/amd64-usr/#{version}/update.gz"
+        "https://update.release.core-os.net/#{architecture}/#{version}/update.gz"
       ]
     end
 

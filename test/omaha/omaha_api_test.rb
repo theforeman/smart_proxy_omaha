@@ -20,9 +20,10 @@ class TestReleaseRepository
 end
 
 class TestMetadataProvider
-  def get(track, release)
+  def get(track, release, architecture)
     Proxy::Omaha::Metadata.new(
       :track => track,
+      :architecture => architecture,
       :release => release,
       :sha1_b64 => '+ZFmPWzv1OdfmKHaGSojbK5Xj3k=',
       :sha256_b64 => 'cSBzKN0c6vKinrH0SdqUZSHlQtCa90vmeKC7p/xk19M=',

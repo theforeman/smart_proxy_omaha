@@ -1,10 +1,11 @@
 module Proxy::Omaha
   class Metadata
-    attr_accessor :release, :sha1_b64, :sha256_b64, :size, :track
+    attr_accessor :release, :sha1_b64, :sha256_b64, :size, :track, :architecture
 
     def initialize(params)
       symbolize_keys_deep!(params)
       @release = params.fetch(:release)
+      @architecture = params.fetch(:architecture)
       @sha1_b64 = params.fetch(:sha1_b64)
       @sha256_b64 = params.fetch(:sha256_b64)
       @size = params.fetch(:size)
@@ -14,6 +15,7 @@ module Proxy::Omaha
     def to_json
       {
         :release => release,
+        :architecture => architecture,
         :sha1_b64 => sha1_b64,
         :sha256_b64 => sha256_b64,
         :size => size,

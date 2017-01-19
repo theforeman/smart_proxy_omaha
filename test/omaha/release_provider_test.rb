@@ -4,7 +4,7 @@ require 'smart_proxy_omaha/release_provider'
 
 class ReleaseProviderTest < Test::Unit::TestCase
   def setup
-    @provider = Proxy::Omaha::ReleaseProvider.new(:track => :stable)
+    @provider = Proxy::Omaha::ReleaseProvider.new(:track => :stable, :architecture => 'amd64-usr')
   end
 
   def test_releases
@@ -54,6 +54,6 @@ class ReleaseProviderTest < Test::Unit::TestCase
                 '1068.10.0',
                 '1122.2.0']
 
-    assert_equal expected.map {|v| Proxy::Omaha::Release.new(:track => @provider.track, :version => v) }, @provider.releases
+    assert_equal expected.map {|v| Proxy::Omaha::Release.new(:track => @provider.track, :version => v, :architecture => 'amd64-usr') }, @provider.releases
   end
 end

@@ -19,7 +19,7 @@ module Proxy::Omaha::OmahaProtocol
     def xml_response(xml)
       xml.updatecheck(:status => 'ok') do
         xml.urls do
-          xml.url(:codebase => "#{base_url}/omahareleases/#{track}/#{release}/")
+          xml.url(:codebase => "#{base_url}/omahareleases/#{track}/#{architecture}/#{release}/")
         end
         xml.manifest(:version => release) do
           xml.packages do
