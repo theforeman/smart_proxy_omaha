@@ -10,12 +10,12 @@ class TestForemanClient
 end
 
 class TestReleaseRepository
-  def releases(track)
+  def releases(track, architecture)
     ['1068.9.0', '1122.2.0'].map { |release| Gem::Version.new(release) }
   end
 
-  def latest_os(track)
-    releases(track).max
+  def latest_os(track, architecture)
+    releases(track, architecture).max
   end
 end
 

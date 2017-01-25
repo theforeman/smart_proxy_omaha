@@ -65,7 +65,7 @@ module Proxy::Omaha::OmahaProtocol
     end
 
     def handle_update
-      latest_os = repository.latest_os(request.track)
+      latest_os = repository.latest_os(request.track, request.board)
       if !latest_os.nil? && latest_os > Gem::Version.new(request.version)
         Proxy::Omaha::OmahaProtocol::Updateresponse.new(
           :appid => request.appid,
