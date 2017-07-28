@@ -28,23 +28,33 @@ Do not forget to register the smart proxy in Foreman via the user interface.
 ## Host Configuration
 
 You need to configure your CoreOS hosts to connect to the Omaha smart-proxy for updates. You can either configure your servers manually or use cloud-config.
+If your smart-proxy uses a self-signed ssl certificate, you have to add the CA certificate to the CoreOS truststore. By default, the smart-proxys uses a PuppetCA certificate. To print the PuppetCA certificate, issue `cat $(puppet config print localcacert)` on any puppet enabled node.
 
 ### Using Config File
 
-Edit `/etc/coreos/update.conf`
+To add a custom CA certificate to CoreOS's truststore:
+
+```bash
+vim /etc/ssl/certs/customCA_root.pem
+sudo /usr/sbin/update-ca-certificates
+```
+
+To configure CoreOS to connect to the Omaha smart-proxy for updates, edit `/etc/coreos/update.conf`:
 
 ```
 GROUP=stable
 SERVER=https://omahaproxy.example.com:8443/omaha/v1/update
 ```
 
-Restart update engine
+Restart update engine:
 
 ```bash
 sudo systemctl restart update-engine
 ```
 
 ### Using Cloud-Config
+
+Configure CoreOS to connect to the Omaha smart-proxy for updates:
 
 ```yaml
 #cloud-config
@@ -53,6 +63,35 @@ coreos:
     group: "stable"
     server: "https://omahaproxy.example.com:8443/omaha/v1/update"
 ```
+
+Add a custom CA certificate to CoreOS's truststore:
+```yaml
+#cloud-config
+write-files:
+  - path: /etc/ssl/certs/customCA_root.pem
+    permissions: 0644
+    content: |
+      -----BEGIN CERTIFICATE-----
+      YOUR-BASE64-ENCODED-CERTIFICATE
+      -----END CERTIFICATE-----
+units:
+  - name: update-ca-certificates.service
+    command: start
+    content: |
+      [Unit]
+      Description=Force Update CA bundle at /etc/ssl/certs/ca-certificates.crt
+      # Since other services depend on the certificate store run this early
+      DefaultDependencies=no
+      Wants=systemd-tmpfiles-setup.service clean-ca-certificates.service
+      After=systemd-tmpfiles-setup.service clean-ca-certificates.service
+      Before=sysinit.target
+      ConditionPathIsReadWrite=/etc/ssl/certs
+
+      [Service]
+      Type=oneshot
+      ExecStart=/usr/sbin/update-ca-certificates
+```
+
 
 ### Release channels
 
