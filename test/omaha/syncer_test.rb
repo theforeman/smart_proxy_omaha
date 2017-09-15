@@ -12,6 +12,10 @@ class SyncerTest < Test::Unit::TestCase
       true
     end
 
+    def complete?
+      true
+    end
+
     def create; end
   end
 

@@ -85,22 +85,13 @@ class ReleaseTest < Test::Unit::TestCase
 
   def test_download
     stub_request(:get, /.*release\.core-os.*/).to_return(:status => [200, 'OK'], :body => "body")
-    expected = [
-      'coreos_production_pxe.vmlinuz',
-      'coreos_production_pxe_image.cpio.gz',
-      'coreos_production_image.bin.bz2',
-      'coreos_production_image.bin.bz2.sig',
-      'coreos_production_vmware_raw_image.bin.bz2',
-      'coreos_production_vmware_raw_image.bin.bz2.sig',
-      'update.gz'
-    ]
 
     assert_equal true, @release.create_path
     assert_equal true, @release.download
 
     existing_files = Dir.entries(@release.path) - ['.', '..']
 
-    assert_equal expected.sort, existing_files.sort
+    assert_equal expected_release_files.sort, existing_files.sort
   end
 
   def test_create_metadata
@@ -118,5 +109,34 @@ class ReleaseTest < Test::Unit::TestCase
     assert_equal true, @release.create_metadata
     assert File.exist?(file)
     assert_equal JSON.parse(expected), JSON.parse(File.read(file))
+  end
+
+  def test_missing_existing_files
+    FileUtils.mkdir_p(@release.path)
+    refute @release.complete?
+    assert_empty @release.existing_files
+    assert_equal expected_release_files.sort, @release.missing_files.sort
+
+    expected_release_files.each do |file|
+      FileUtils.touch(File.join(@release.path, file))
+    end
+
+    assert @release.complete?
+    assert_empty @release.missing_files
+    assert_equal expected_release_files.sort, @release.existing_files.sort
+  end
+
+  private
+
+  def expected_release_files
+    [
+      'coreos_production_pxe.vmlinuz',
+      'coreos_production_pxe_image.cpio.gz',
+      'coreos_production_image.bin.bz2',
+      'coreos_production_image.bin.bz2.sig',
+      'coreos_production_vmware_raw_image.bin.bz2',
+      'coreos_production_vmware_raw_image.bin.bz2.sig',
+      'update.gz'
+    ]
   end
 end
