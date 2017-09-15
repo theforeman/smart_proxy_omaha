@@ -4,7 +4,8 @@ require 'uri'
 
 module Proxy::Omaha
   module HttpShared
-    def connection_factory(url)
+    def connection_factory(url, opts = {})
+      method = opts.fetch(:method, :get)
       uri = URI.parse(url)
 
       if Proxy::Omaha::Plugin.settings.proxy.to_s.empty?
@@ -22,7 +23,15 @@ module Proxy::Omaha
         http.use_ssl = true
       end
 
-      request = Net::HTTP::Get.new(uri.request_uri)
+      request_class = case method
+                        when :get
+                          Net::HTTP::Get
+                        when :head
+                          Net::HTTP::Head
+                        else
+                          raise "Unknown request class"
+                        end
+      request = request_class.new(uri.request_uri)
 
       [http, request]
     end
