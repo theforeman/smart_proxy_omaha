@@ -15,6 +15,9 @@ module Proxy::LogBuffer
 end
 include Proxy::Log
 
+# Unload all other plugins
+::Proxy::Plugins.instance.loaded.delete_if { |plugin| plugin[:name] != :omaha }
+
 ::Proxy::PluginInitializer.new(::Proxy::Plugins.instance).initialize_plugins
 
 unless ::Proxy::Plugins.instance.plugin_enabled?(:omaha)
