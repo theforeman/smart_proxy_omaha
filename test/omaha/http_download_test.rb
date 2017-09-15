@@ -24,11 +24,4 @@ class HttpDownloadTest < Test::Unit::TestCase
     assert_equal 'body', File.read(@destination_path)
     assert_equal true, http_download.result
   end
-
-  def test_should_skip_download_if_one_is_in_progress
-    locked = Proxy::FileLock.try_locking(@destination_path)
-    http_download = ::Proxy::Omaha::HttpDownload.new(@source_url, locked.path)
-    http_download.start.join
-    assert_equal false, http_download.result
-  end
 end

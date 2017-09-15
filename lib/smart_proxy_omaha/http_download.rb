@@ -6,11 +6,12 @@ module Proxy::Omaha
     include Proxy::Log
     include HttpShared
 
-    attr_accessor :dst, :src, :result
+    attr_accessor :dst, :src, :tmp, :result
 
     def initialize(src, dst)
       @src = src
       @dst = dst
+      @tmp = Tempfile.new('download', File.dirname(dst))
     end
 
     def start
@@ -22,12 +23,10 @@ module Proxy::Omaha
     end
 
     def run
-      with_filelock do
-        logger.info "Downloading #{src} to #{dst}."
-        res = download
-        logger.info "Finished downloading #{dst}."
-        res
-      end
+      logger.info "Downloading #{src} to #{dst}."
+      res = download
+      logger.info "Finished downloading #{dst}."
+      res
     end
 
     def join
@@ -40,26 +39,18 @@ module Proxy::Omaha
       http, request = connection_factory(src)
 
       http.request(request) do |response|
-        open(dst, 'w') do |io|
+        open(tmp, 'w') do |io|
           response.read_body do |chunk|
             io.write chunk
           end
         end
       end
-      true
-    end
 
-    def with_filelock
-      lock = Proxy::FileLock.try_locking(dst)
-      if lock.nil?
-        false
-      else
-        begin
-          yield
-        ensure
-          Proxy::FileLock.unlock(lock)
-        end
-      end
+      File.rename(tmp, dst)
+
+      true
+    ensure
+      tmp.unlink
     end
   end
 end
