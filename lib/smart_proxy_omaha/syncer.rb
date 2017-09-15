@@ -20,10 +20,10 @@ module Proxy::Omaha
     def sync_track(track)
       release_provider(track).releases.last(sync_count).each do |release|
         if release.exists?
-          if release.valid?
-            logger.info "#{track} release #{release} already exists and is valid."
+          if release.valid? && release.complete?
+            logger.info "#{track} release #{release} already exists, is complete and is valid."
             next
-          else
+          elsif !release.valid?
             logger.info "#{track} release #{release} is invalid. Purging."
             release.purge
           end

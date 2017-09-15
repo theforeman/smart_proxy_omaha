@@ -27,7 +27,7 @@ module Proxy::Omaha
     end
 
     def valid?
-      expected_files_exist?
+      complete?
     end
 
     def create
@@ -54,12 +54,13 @@ module Proxy::Omaha
     def download
       sources.map do |url|
         file = URI.parse(url).path.split('/').last
+        next if file_exists?(file)
         dst = File.join(path, file)
         logger.debug "Downloading file #{url} to #{dst}"
         task = ::Proxy::Omaha::HttpDownload.new(url, dst)
         task.start
         task
-      end.each(&:join).map(&:result).all?
+      end.compact.each(&:join).map(&:result).all?
     end
 
     def create_metadata
@@ -104,8 +105,20 @@ module Proxy::Omaha
       sources.map { |source| File.basename(source) }
     end
 
-    def expected_files_exist?
-      expected_files.map {|file| File.file?(File.join(path, file)) }.all?
+    def existing_files
+      Dir.glob(File.join(path, '*')).map { |file| File.basename(file) }
+    end
+
+    def missing_files
+      expected_files - existing_files
+    end
+
+    def complete?
+      missing_files.empty?
+    end
+
+    def file_exists?(file)
+      File.file?(File.join(path, file))
     end
 
     def purge
