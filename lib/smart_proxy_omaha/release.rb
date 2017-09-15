@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'smart_proxy_omaha/http_download'
+require 'smart_proxy_omaha/http_verify'
 require 'smart_proxy_omaha/metadata_provider'
 
 module Proxy::Omaha
@@ -27,7 +28,13 @@ module Proxy::Omaha
     end
 
     def valid?
-      complete?
+      sources.each do |url|
+        filename = URI.parse(url).path.split('/').last
+        next unless file_exists?(filename)
+        local_file = File.join(path, filename)
+        return false unless HttpVerify.new(:remote_url => url, :local_file => local_file).valid?
+      end
+      true
     end
 
     def create
