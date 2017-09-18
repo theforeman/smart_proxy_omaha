@@ -100,7 +100,8 @@ class ReleaseTest < Test::Unit::TestCase
 
     existing_files = Dir.entries(@release.path) - ['.', '..']
 
-    assert_equal expected_release_files.sort, existing_files.sort
+    assert_equal (expected_release_files + ['update.gz.DIGESTS']).sort, existing_files.sort
+    assert_equal "841a2d689ad86bd1611447453c22c6fc  update.gz\n", File.read(File.join(@release.path, 'update.gz.DIGESTS'))
   end
 
   def test_create_metadata
@@ -164,18 +165,41 @@ class ReleaseTest < Test::Unit::TestCase
     refute older.current?
   end
 
+  def test_digests_valid
+    FileUtils.mkdir_p(@release.path)
+    File.open(File.join(@release.path, "update.gz"), 'w') { |file| file.write('body') }
+    File.open(File.join(@release.path, "update.gz.DIGESTS"), 'w') { |file| file.write("841a2d689ad86bd1611447453c22c6fc  update.gz\n") }
+    expected = {
+      'update.gz' => ['841a2d689ad86bd1611447453c22c6fc']
+    }
+    assert_equal expected, @release.digests
+    assert_equal true, @release.valid?
+  end
+
+  def test_digests_invalid
+    FileUtils.mkdir_p(@release.path)
+    File.open(File.join(@release.path, "update.gz"), 'w') { |file| file.write('invalid') }
+    File.open(File.join(@release.path, "update.gz.DIGESTS"), 'w') { |file| file.write("841a2d689ad86bd1611447453c22c6fc  update.gz\n") }
+    assert_equal false, @release.valid?
+  end
+
   private
 
   def expected_release_files
     [
       'coreos_production_pxe.vmlinuz',
+      'coreos_production_pxe.DIGESTS',
       'coreos_production_pxe_image.cpio.gz',
+      'coreos_production_pxe_image.cpio.gz.DIGESTS',
       'coreos_production_image.bin.bz2',
       'coreos_production_image.bin.bz2.sig',
+      'coreos_production_image.bin.bz2.DIGESTS',
       'coreos_production_vmware_raw_image.bin.bz2',
       'coreos_production_vmware_raw_image.bin.bz2.sig',
+      'coreos_production_vmware_raw_image.bin.bz2.DIGESTS',
       'update.gz',
-      'version.txt'
+      'version.txt',
+      'version.txt.DIGESTS'
     ]
   end
 end
