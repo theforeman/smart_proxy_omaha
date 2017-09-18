@@ -73,4 +73,11 @@ class OmahaApiTest < Test::Unit::TestCase
     assert last_response.ok?, "Last response was not ok: #{last_response.status} #{last_response.body}"
     assert_xml_equal xml_fixture('response_update_complete_error'), last_response.body
   end
+
+  def test_processes_internalerror
+    TestForemanClient.any_instance.stubs(:post_facts).raises(StandardError.new('Test Error'))
+    post "/v1/update", xml_fixture('request_update_complete_update')
+    refute last_response.ok?
+    assert_xml_equal xml_fixture('response_errorinternal'), last_response.body
+  end
 end

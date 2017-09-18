@@ -17,6 +17,10 @@ module Proxy::Omaha::OmahaProtocol
       xml.to_xml
     end
 
+    def http_status
+      200
+    end
+
     protected
 
     def xml

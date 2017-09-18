@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response protocol="3.0" server="example.org">
+  <daystart elapsed_seconds="0"/>
+  <app app_id="e96281a6-d1af-4bde-9a0a-97b76e56dc57" status="error-internal" />
+</response>

@@ -27,6 +27,7 @@ module Proxy::Omaha
         :metadata_provider => metadata_provider
       )
       response = omaha_handler.handle
+      status response.http_status
       response.to_xml
     end
   end
