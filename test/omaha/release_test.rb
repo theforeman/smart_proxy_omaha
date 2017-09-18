@@ -136,7 +136,8 @@ class ReleaseTest < Test::Unit::TestCase
       'coreos_production_image.bin.bz2.sig',
       'coreos_production_vmware_raw_image.bin.bz2',
       'coreos_production_vmware_raw_image.bin.bz2.sig',
-      'update.gz'
+      'update.gz',
+      'version.txt'
     ]
   end
 end
