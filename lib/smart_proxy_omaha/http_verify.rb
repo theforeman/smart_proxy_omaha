@@ -54,7 +54,7 @@ module Proxy::Omaha
     end
 
     def local_md5
-      Digest::MD5.file(local_file).base64digest
+      @local_md5 ||= Digest::MD5.file(local_file).base64digest
     end
 
     def remote_md5

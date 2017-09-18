@@ -1,4 +1,5 @@
 require 'thread'
+require 'base64'
 require 'smart_proxy_omaha/http_shared'
 require 'smart_proxy_omaha/http_verify'
 
@@ -35,6 +36,10 @@ module Proxy::Omaha
         File.unlink(tmp)
         return false
       end
+      # no DIGESTS file is provided for update.gz
+      # so we need to generate our own based on the
+      # http headers
+      write_digest if filename == 'update.gz'
       finish
     ensure
       tmp.unlink
@@ -46,11 +51,7 @@ module Proxy::Omaha
     end
 
     def valid?
-      HttpVerify.new(
-        :local_file => tmp,
-        :http_request => http_response,
-        :filename => filename,
-      ).valid?
+      verifier.valid?
     end
 
     def finish
@@ -58,7 +59,20 @@ module Proxy::Omaha
       true
     end
 
+    def write_digest
+      hexdigest = Digest.hexencode(Base64.decode64(verifier.local_md5))
+      File.open("#{dst}.DIGESTS", 'w') { |file| file.write("#{hexdigest}  #{filename}\n") }
+    end
+
     private
+
+    def verifier
+      @verifier ||= HttpVerify.new(
+        :local_file => tmp,
+        :http_request => http_response,
+        :filename => filename,
+      )
+    end
 
     def filename
       File.basename(dst)

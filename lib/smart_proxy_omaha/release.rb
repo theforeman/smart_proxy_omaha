@@ -1,6 +1,6 @@
 require 'fileutils'
+require 'digest/md5'
 require 'smart_proxy_omaha/http_download'
-require 'smart_proxy_omaha/remote_verify'
 require 'smart_proxy_omaha/metadata_provider'
 
 module Proxy::Omaha
@@ -8,6 +8,7 @@ module Proxy::Omaha
     include Proxy::Log
 
     attr_accessor :track, :version, :architecture
+    attr_writer :digests
 
     def initialize(options)
       @track = options.fetch(:track).to_s
@@ -36,13 +37,10 @@ module Proxy::Omaha
     end
 
     def valid?
-      sources.each do |url|
-        filename = URI.parse(url).path.split('/').last
-        next unless file_exists?(filename)
-        local_file = File.join(path, filename)
-        return false unless RemoteVerify.new(:remote_url => url, :local_file => local_file).valid?
-      end
-      true
+      existing_files.select { |file| file !~ /\.(DIGESTS|sig)$/ }.map do |file|
+        next unless digests[file]
+        digests[file].include?(Digest::MD5.file(File.join(path, file)).hexdigest)
+      end.compact.all?
     end
 
     def create
@@ -118,12 +116,17 @@ module Proxy::Omaha
       upstream = "https://#{track}.release.core-os.net/#{architecture}/#{version}"
       [
         "#{upstream}/coreos_production_pxe.vmlinuz",
+        "#{upstream}/coreos_production_pxe.DIGESTS",
         "#{upstream}/coreos_production_image.bin.bz2",
         "#{upstream}/coreos_production_image.bin.bz2.sig",
+        "#{upstream}/coreos_production_image.bin.bz2.DIGESTS",
         "#{upstream}/coreos_production_pxe_image.cpio.gz",
+        "#{upstream}/coreos_production_pxe_image.cpio.gz.DIGESTS",
         "#{upstream}/coreos_production_vmware_raw_image.bin.bz2",
         "#{upstream}/coreos_production_vmware_raw_image.bin.bz2.sig",
+        "#{upstream}/coreos_production_vmware_raw_image.bin.bz2.DIGESTS",
         "#{upstream}/version.txt",
+        "#{upstream}/version.txt.DIGESTS",
         "https://update.release.core-os.net/#{architecture}/#{version}/update.gz"
       ]
     end
@@ -140,6 +143,10 @@ module Proxy::Omaha
       expected_files - existing_files
     end
 
+    def digest_files
+      Dir.glob(File.join(path, '*.DIGESTS')).map { |file| File.basename(file) }
+    end
+
     def complete?
       missing_files.empty?
     end
@@ -154,6 +161,24 @@ module Proxy::Omaha
       true
     rescue
       false
+    end
+
+    def digests
+      @digests ||= load_digests!
+    end
+
+    def load_digests!
+      self.digests = {}
+      digest_files.each do |digest_file|
+        file = File.basename(digest_file, '.DIGESTS')
+        File.readlines(File.join(path, digest_file)).each do |line|
+          next unless line =~ /^\w+[ ]+\S+$/
+          hexdigest = line.split(/[ ]+/).first
+          self.digests[file] ||= []
+          self.digests[file] << hexdigest
+        end
+      end
+      self.digests
     end
 
     private
