@@ -1,12 +1,13 @@
 require 'thread'
 require 'smart_proxy_omaha/http_shared'
+require 'smart_proxy_omaha/http_verify'
 
 module Proxy::Omaha
   class HttpDownload
     include Proxy::Log
     include HttpShared
 
-    attr_accessor :dst, :src, :tmp, :result
+    attr_accessor :dst, :src, :tmp, :result, :http_response
 
     def initialize(src, dst)
       @src = src
@@ -23,22 +24,50 @@ module Proxy::Omaha
     end
 
     def run
-      logger.info "Downloading #{src} to #{dst}."
-      res = download
-      logger.info "Finished downloading #{dst}."
-      res
+      logger.info "#{filename}: Downloading #{src} to #{dst}."
+      unless download
+        logger.error "#{filename} failed to download."
+        return false
+      end
+      logger.info "#{filename}: Finished downloading #{dst}."
+      unless valid?
+        logger.error "#{filename} is not valid. Deleting corrupt file."
+        File.unlink(tmp)
+        return false
+      end
+      finish
+    ensure
+      tmp.unlink
+      true
     end
 
     def join
       @task.join
     end
 
+    def valid?
+      HttpVerify.new(
+        :local_file => tmp,
+        :http_request => http_response,
+        :filename => filename,
+      ).valid?
+    end
+
+    def finish
+      File.rename(tmp, dst)
+      true
+    end
+
     private
+
+    def filename
+      File.basename(dst)
+    end
 
     def download
       http, request = connection_factory(src)
 
-      http.request(request) do |response|
+      self.http_response = http.request(request) do |response|
         open(tmp, 'w') do |io|
           response.read_body do |chunk|
             io.write chunk
@@ -46,11 +75,7 @@ module Proxy::Omaha
         end
       end
 
-      File.rename(tmp, dst)
-
       true
-    ensure
-      tmp.unlink
     end
   end
 end

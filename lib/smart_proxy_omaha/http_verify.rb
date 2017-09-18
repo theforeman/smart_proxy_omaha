@@ -2,16 +2,12 @@ module Proxy::Omaha
   class HttpVerify
     include Proxy::Log
 
-    attr_accessor :remote_url, :local_file, :filename
+    attr_accessor :http_request, :local_file, :filename
 
     def initialize(opts = {})
-      self.remote_url = opts.fetch(:remote_url)
+      self.http_request = opts.fetch(:http_request)
       self.local_file = opts.fetch(:local_file)
-      self.filename = File.basename(local_file)
-    end
-
-    def http_request
-      @http_request ||= ::Proxy::Omaha::HttpRequest.new.head(remote_url)
+      self.filename = opts.fetch(:filename, File.basename(local_file))
     end
 
     def valid?
@@ -22,6 +18,10 @@ module Proxy::Omaha
     end
 
     def file_size_valid?
+      unless remote_size
+        logger.error "#{filename}: Cannot determine remote file size."
+        return false
+      end
       unless local_size == remote_size
         logger.debug "#{filename}: File sizes do not match. Remote: #{remote_size}, Local: #{local_size}"
         return false
@@ -34,7 +34,7 @@ module Proxy::Omaha
     end
 
     def remote_size
-      headers['content-length'].first.to_i
+      @remote_size ||= content_length
     end
 
     def md5_hash_valid?
@@ -59,6 +59,11 @@ module Proxy::Omaha
 
     def remote_md5
       remote_hashes['md5']
+    end
+
+    def content_length
+      length = headers['content-length'] || headers['x-goog-stored-content-length']
+      length.first.to_i if length
     end
 
     def headers

@@ -86,7 +86,14 @@ class ReleaseTest < Test::Unit::TestCase
   end
 
   def test_download
-    stub_request(:get, /.*release\.core-os.*/).to_return(:status => [200, 'OK'], :body => "body")
+    stub_request(:get, /.*release\.core-os.*/).to_return(
+      :status => [200, 'OK'],
+      :body => 'body',
+      headers: {
+        'Content-Length' => 4,
+        'x-goog-hash' => 'md5=hBotaJrYa9FhFEdFPCLG/A=='
+      }
+    )
 
     assert_equal true, @release.create_path
     assert_equal true, @release.download
