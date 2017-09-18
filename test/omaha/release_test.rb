@@ -23,8 +23,10 @@ class ReleaseTest < Test::Unit::TestCase
     FileUtils.rm_rf(@contentpath)
   end
 
-  def test_path
+  def test_paths
+    assert_equal "#{@contentpath}/stable/amd64-usr", @release.base_path
     assert_equal "#{@contentpath}/stable/amd64-usr/1068.9.0", @release.path
+    assert_equal "#{@contentpath}/stable/amd64-usr/current", @release.current_path
   end
 
   def test_exists?
@@ -124,6 +126,35 @@ class ReleaseTest < Test::Unit::TestCase
     assert @release.complete?
     assert_empty @release.missing_files
     assert_equal expected_release_files.sort, @release.existing_files.sort
+  end
+
+  def test_current_release_idempotent
+    FileUtils.mkdir_p(@release.path)
+    refute @release.current?
+    @release.mark_as_current!
+    assert @release.current?
+    symlinks = Dir.glob("#{@contentpath}/**/*").select { |f| File.symlink?(f) }
+    assert_equal 1, symlinks.count
+    @release.mark_as_current!
+    assert @release.current?
+    assert_equal symlinks, Dir.glob("#{@contentpath}/**/*").select { |f| File.symlink?(f) }
+    assert_equal @release.path, File.readlink(@release.current_path)
+  end
+
+  def test_current_release_update
+    FileUtils.mkdir_p(@release.path)
+    older = Proxy::Omaha::Release.new(
+      :track => :stable,
+      :architecture => 'amd64-usr',
+      :version => '100.0.0'
+    )
+    FileUtils.mkdir_p(older.path)
+    older.mark_as_current!
+    assert older.current?
+    refute @release.current?
+    @release.mark_as_current!
+    assert @release.current?
+    refute older.current?
   end
 
   private

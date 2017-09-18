@@ -13,23 +13,30 @@ module Proxy::Omaha
 
       ['alpha', 'beta', 'stable'].each do |track|
         logger.debug "Syncing track: #{track}..."
-        sync_track(track)
+        releases = release_provider(track).releases
+        releases.last(sync_count).each do |release|
+          sync_release(track, release)
+        end
+        update_current_release(track, releases.last) if releases.any?
       end
     end
 
-    def sync_track(track)
-      release_provider(track).releases.last(sync_count).each do |release|
-        if release.exists?
-          if !release.valid?
-            logger.info "#{track} release #{release} is invalid. Purging."
-            release.purge
-          elsif release.complete?
-            logger.info "#{track} release #{release} exists, is complete and valid. Skipping sync."
-            next
-          end
+    def sync_release(track, release)
+      if release.exists?
+        if !release.valid?
+          logger.info "#{track} release #{release} is invalid. Purging."
+          release.purge
+        elsif release.complete?
+          logger.info "#{track} release #{release} exists, is complete and valid. Skipping sync."
+          return
         end
-        release.create
       end
+      release.create
+    end
+
+    def update_current_release(track, release)
+      logger.debug "#{track}: Updating current release to #{release}"
+      release.mark_as_current!
     end
 
     private
