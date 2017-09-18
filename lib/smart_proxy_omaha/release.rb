@@ -15,8 +15,16 @@ module Proxy::Omaha
       @version = Gem::Version.new(options.fetch(:version))
     end
 
+    def base_path
+      @base_path ||= File.join(Proxy::Omaha::Plugin.settings.contentpath, track, architecture)
+    end
+
     def path
-      @path ||= File.join(Proxy::Omaha::Plugin.settings.contentpath, track, architecture, version.to_s)
+      @path ||= File.join(base_path, version.to_s)
+    end
+
+    def current_path
+      @current_path ||= File.join(base_path, 'current')
     end
 
     def metadata
@@ -43,6 +51,17 @@ module Proxy::Omaha
       return false unless download
       return false unless create_metadata
       true
+    end
+
+    def current?
+      return false unless File.symlink?(current_path)
+      File.readlink(current_path) == path
+    end
+
+    def mark_as_current!
+      return true if current?
+      File.unlink(current_path) if File.symlink?(current_path)
+      FileUtils.ln_s(path, current_path)
     end
 
     def <=>(other)

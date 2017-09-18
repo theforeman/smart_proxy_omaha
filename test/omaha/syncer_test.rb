@@ -17,6 +17,7 @@ class SyncerTest < Test::Unit::TestCase
     end
 
     def create; end
+    def mark_as_current!; end
   end
 
   class FakeReleaseProvider
