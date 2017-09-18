@@ -104,6 +104,7 @@ module Proxy::Omaha
         "#{upstream}/coreos_production_pxe_image.cpio.gz",
         "#{upstream}/coreos_production_vmware_raw_image.bin.bz2",
         "#{upstream}/coreos_production_vmware_raw_image.bin.bz2.sig",
+        "#{upstream}/version.txt",
         "https://update.release.core-os.net/#{architecture}/#{version}/update.gz"
       ]
     end
