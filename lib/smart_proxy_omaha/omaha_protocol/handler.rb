@@ -39,6 +39,13 @@ module Proxy::Omaha::OmahaProtocol
       else
         handle_event
       end
+    rescue StandardError => e
+      logger.error("OmahaHandler: Aw, Snap! Error: #{e}", e.backtrace)
+      Proxy::Omaha::OmahaProtocol::Errorinternalresponse.new(
+        :appid => request.appid,
+        :base_url => request.base_url,
+        :status => 'error-internal',
+      )
     end
 
     private
@@ -48,6 +55,7 @@ module Proxy::Omaha::OmahaProtocol
     end
 
     def handle_event
+      logger.info "OmahaHandler: Processing event."
       Proxy::Omaha::OmahaProtocol::Eventacknowledgeresponse.new(
         :appid => request.appid,
         :base_url => request.base_url
@@ -67,6 +75,7 @@ module Proxy::Omaha::OmahaProtocol
     def handle_update
       latest_os = repository.latest_os(request.track, request.board)
       if !latest_os.nil? && latest_os > Gem::Version.new(request.version)
+        logger.info "OmahaHandler: Offering update from #{request.version} to #{latest_os.version}"
         Proxy::Omaha::OmahaProtocol::Updateresponse.new(
           :appid => request.appid,
           :metadata => metadata_provider.get(request.track, latest_os, request.board),
@@ -74,6 +83,7 @@ module Proxy::Omaha::OmahaProtocol
           :base_url => request.base_url
         )
       else
+        logger.info "OmahaHandler: No update."
         Proxy::Omaha::OmahaProtocol::Noupdateresponse.new(
           :appid => request.appid,
           :base_url => request.base_url
