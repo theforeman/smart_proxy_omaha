@@ -181,6 +181,27 @@ module Proxy::Omaha
       self.digests
     end
 
+    def to_h
+      {
+        :name => to_s,
+        :current => current?,
+        :architecture => architecture,
+        :track => track,
+        :complete => complete?,
+        :files => existing_files
+      }
+    end
+
+    def to_json
+      to_h.to_json
+    end
+
+    def file_urls(base_url)
+      existing_files.map do |file|
+        [base_url, 'omahareleases', track, architecture, self, file].join('/')
+      end
+    end
+
     private
 
     def metadata_provider
