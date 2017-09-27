@@ -1,3 +1,5 @@
+require 'smart_proxy_omaha/track'
+
 module Proxy::Omaha::OmahaProtocol
   class Handler
     include ::Proxy::Log
@@ -22,7 +24,7 @@ module Proxy::Omaha::OmahaProtocol
         )
       end
 
-      unless ['stable', 'beta', 'alpha'].include?(request.track)
+      unless Proxy::Omaha::Track.valid?(request.track)
         logger.error "Unknown track requested. Aborting Omaha request."
         return Proxy::Omaha::OmahaProtocol::Eventacknowledgeresponse.new(
           :appid => request.appid,
@@ -91,7 +93,7 @@ module Proxy::Omaha::OmahaProtocol
 
     def handle_update
       latest_os = repository.latest_os(request.track, request.board)
-      if !latest_os.nil? && latest_os > Gem::Version.new(request.version)
+      if !latest_os.nil? && latest_os.version > Gem::Version.new(request.version)
         logger.info "OmahaHandler: Offering update from #{request.version} to #{latest_os.version}"
         Proxy::Omaha::OmahaProtocol::Updateresponse.new(
           :appid => request.appid,

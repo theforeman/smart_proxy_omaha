@@ -11,7 +11,21 @@ end
 
 class TestReleaseRepository
   def releases(track, architecture)
-    ['1068.9.0', '1122.2.0'].map { |release| Gem::Version.new(release) }
+    ['1068.9.0', '1122.2.0'].map do |release|
+      Proxy::Omaha::Release.new(
+        :track => 'alpha',
+        :architecture => 'amd64-usr',
+        :version => release
+      )
+    end
+  end
+
+  def tracks
+    ['alpha', 'beta', 'stable']
+  end
+
+  def architectures(track)
+    ['amd64-usr']
   end
 
   def latest_os(track, architecture)
@@ -85,5 +99,21 @@ class OmahaApiTest < Test::Unit::TestCase
     post "/v1/update", xml_fixture('request_update_complete_update')
     refute last_response.ok?
     assert_xml_equal xml_fixture('response_errorinternal'), last_response.body
+  end
+
+  def test_get_tracks
+    get "/tracks"
+    assert last_response.ok?, "Last response was not ok: #{last_response.status} #{last_response.body}"
+    parsed = JSON.parse(last_response.body)
+    assert_kind_of Array, parsed
+    assert_equal ['alpha', 'beta', 'stable'], parsed.map { |track| track['name'] }
+  end
+
+  def test_get_releases
+    get "/tracks/alpha/amd64-usr"
+    assert last_response.ok?, "Last response was not ok: #{last_response.status} #{last_response.body}"
+    parsed = JSON.parse(last_response.body)
+    assert_kind_of Array, parsed
+    assert_equal ['1068.9.0', '1122.2.0'], parsed.map { |track| track['name'] }
   end
 end

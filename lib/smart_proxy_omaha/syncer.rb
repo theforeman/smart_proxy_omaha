@@ -1,4 +1,5 @@
 require 'smart_proxy_omaha/release'
+require 'smart_proxy_omaha/track'
 require 'smart_proxy_omaha/release_provider'
 
 module Proxy::Omaha
@@ -11,7 +12,7 @@ module Proxy::Omaha
         return
       end
 
-      ['alpha', 'beta', 'stable'].each do |track|
+      Proxy::Omaha::Track.all.each do |track|
         logger.debug "Syncing track: #{track}..."
         releases = release_provider(track).releases
         releases.last(sync_count).each do |release|
