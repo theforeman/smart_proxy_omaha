@@ -7,6 +7,7 @@ require 'smart_proxy_omaha/omaha_protocol/request'
 require 'smart_proxy_omaha/omaha_protocol/eventacknowledgeresponse'
 require 'smart_proxy_omaha/omaha_protocol/noupdateresponse'
 require 'smart_proxy_omaha/omaha_protocol/updateresponse'
+require 'smart_proxy_omaha/omaha_protocol/pingresponse'
 require 'smart_proxy_omaha/omaha_protocol/errorinternalresponse'
 require 'smart_proxy_omaha/omaha_protocol/handler'
 
