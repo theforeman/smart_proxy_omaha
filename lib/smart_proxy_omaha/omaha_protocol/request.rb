@@ -6,7 +6,7 @@ module Proxy::Omaha::OmahaProtocol
     attr_reader :appid, :version, :track, :updatecheck, :eventtype, :eventresult, :board,
       :alephversion, :oemversion, :oem,
       :platform, :osmajor, :osminor, :hostname, :ipaddress, :ipaddress6,
-      :body, :ip, :base_url
+      :body, :ip, :base_url, :ping
 
     def initialize(body, options)
       @body = body
@@ -46,6 +46,18 @@ module Proxy::Omaha::OmahaProtocol
       appid == Proxy::Omaha::OmahaProtocol::COREOS_APPID
     end
 
+    def updatecheck?
+      !@updatecheck.empty?
+    end
+
+    def ping?
+      !@ping.empty?
+    end
+
+    def event?
+      !@event.empty?
+    end
+
     private
 
     def parse_request
@@ -61,7 +73,9 @@ module Proxy::Omaha::OmahaProtocol
       @oem = xml_request.xpath('/request/app/@oem').to_s
       @platform = xml_request.xpath('/request/os/@platform').to_s
       @platform = 'CoreOS' if @platform.empty?
-      @updatecheck = !xml_request.xpath('/request/app/updatecheck').to_s.empty?
+      @updatecheck = xml_request.xpath('/request/app/updatecheck').to_s
+      @ping = xml_request.xpath('/request/app/ping').to_s
+      @event = xml_request.xpath('/request/app/event').to_s
       @eventtype = xml_request.xpath('/request/app/event/@eventtype').to_s.to_i
       @eventresult = xml_request.xpath('/request/app/event/@eventresult').to_s.to_i
     end

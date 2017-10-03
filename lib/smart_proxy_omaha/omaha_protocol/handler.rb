@@ -32,20 +32,21 @@ module Proxy::Omaha::OmahaProtocol
       end
 
       upload_facts
-      process_report
+      process_report if request.event?
 
-      if request.updatecheck
+      if request.updatecheck?
         handle_update
-      else
+      elsif request.event?
         handle_event
+      elsif request.ping?
+        handle_ping
+      else
+        logger.info "OmahaHandler: Unknown request."
+        handle_error
       end
     rescue StandardError => e
       logger.error("OmahaHandler: Aw, Snap! Error: #{e}", e.backtrace)
-      Proxy::Omaha::OmahaProtocol::Errorinternalresponse.new(
-        :appid => request.appid,
-        :base_url => request.base_url,
-        :status => 'error-internal',
-      )
+      handle_error
     end
 
     private
@@ -59,6 +60,22 @@ module Proxy::Omaha::OmahaProtocol
       Proxy::Omaha::OmahaProtocol::Eventacknowledgeresponse.new(
         :appid => request.appid,
         :base_url => request.base_url
+      )
+    end
+
+    def handle_ping
+      logger.info "OmahaHandler: Processing ping."
+      Proxy::Omaha::OmahaProtocol::Pingresponse.new(
+        :appid => request.appid,
+        :base_url => request.base_url
+      )
+    end
+
+    def handle_error
+      Proxy::Omaha::OmahaProtocol::Errorinternalresponse.new(
+        :appid => request.appid,
+        :base_url => request.base_url,
+        :status => 'error-internal',
       )
     end
 

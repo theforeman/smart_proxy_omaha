@@ -1,0 +1,6 @@
+<request protocol="3.0" version="update_engine-0.4.2" updaterversion="update_engine-0.4.2" installsource="scheduler" ismachine="1">
+  <os version="Chateau" platform="CoreOS" sp="1409.7.0_x86_64"></os>
+  <app appid="{e96281a6-d1af-4bde-9a0a-97b76e56dc57}" version="1409.7.0" track="stable" bootid="{9f849398-6c5d-4ad2-af52-07fd168ff548}" oem="vmware" oemversion="10.1.5" alephversion="1409.7.0" machineid="904694c1f8e148f0a77ef0884711da1a" lang="en-US" board="amd64-usr" hardware_class="" delta_okay="false">
+    <ping active="1"></ping>
+  </app>
+</request>

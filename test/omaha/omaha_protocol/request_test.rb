@@ -25,6 +25,10 @@ class RequestTest < Test::Unit::TestCase
     assert_equal 3, @request.eventtype
     assert_equal 2, @request.eventresult
     assert @request.updatecheck
+    assert @request.ping
+    assert_equal true, @request.ping?
+    assert_equal true, @request.event?
+    assert_equal true, @request.updatecheck?
   end
 
   def test_from_coreos
