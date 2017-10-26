@@ -46,6 +46,7 @@ class RequestTest < Test::Unit::TestCase
         :hostname => 'omaha.example.com',
         :ipaddress => '1.1.1.1',
         :ipaddress6 => nil,
+        :machineid => '8e9450f47a4c47adbfe48b946e201c84',
         :oem => '',
         :oemversion => '',
         :osmajor => '1068',

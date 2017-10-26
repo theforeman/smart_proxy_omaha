@@ -4,7 +4,7 @@ require 'ipaddr'
 module Proxy::Omaha::OmahaProtocol
   class Request
     attr_reader :appid, :version, :track, :updatecheck, :eventtype, :eventresult, :board,
-      :alephversion, :oemversion, :oem,
+      :alephversion, :oemversion, :oem, :machineid,
       :platform, :osmajor, :osminor, :hostname, :ipaddress, :ipaddress6,
       :body, :ip, :base_url, :ping
 
@@ -63,6 +63,7 @@ module Proxy::Omaha::OmahaProtocol
     def parse_request
       xml_request = Nokogiri::XML(body)
       @appid = xml_request.xpath('/request/app/@appid').to_s.tr('{}', '')
+      @machineid = xml_request.xpath('/request/app/@machineid').to_s
       @version = xml_request.xpath('/request/app/@version').to_s
       @osmajor = version.gsub(/^(\d+)\.\d\.\d$/, '\1')
       @osminor = version.gsub(/^\d+\.(\d\.\d)$/, '\1')
@@ -108,7 +109,8 @@ module Proxy::Omaha::OmahaProtocol
         :osminor => osminor,
         :ipaddress => ipaddress,
         :ipaddress6 => ipaddress6,
-        :hostname => hostname
+        :hostname => hostname,
+        :machineid => machineid
       }
     end
   end
