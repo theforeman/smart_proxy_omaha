@@ -5,8 +5,25 @@ require 'smart_proxy_omaha/omaha_plugin'
 ENV['RACK_ENV'] = 'test'
 
 class TestForemanClient
-  def post_facts(factsdata); end
-  def post_report(report); end
+  @@requests = {}
+
+  def self.requests
+    @@requests
+  end
+
+  def self.clear_requests
+    @@requests = {}
+  end
+
+  def post_facts(factsdata)
+    @@requests[:facts] ||= []
+    @@requests[:facts] << JSON.parse(factsdata)
+  end
+
+  def post_report(report)
+    @@requests[:reports] ||= []
+    @@requests[:reports] << JSON.parse(report)
+  end
 end
 
 class TestReleaseRepository
@@ -70,10 +87,28 @@ class OmahaApiTest < Test::Unit::TestCase
     Proxy::Omaha::Api.new
   end
 
+  def setup
+    TestForemanClient.clear_requests
+  end
+
   def test_processes_update_complete_noupdate
+    Proxy::Omaha::OmahaProtocol::Handler.any_instance.stubs(:report_timestamp).returns('fake_timestamp')
     post "/v1/update", xml_fixture('request_update_complete_noupdate')
     assert last_response.ok?, "Last response was not ok: #{last_response.status} #{last_response.body}"
     assert_xml_equal xml_fixture('response_update_complete_noupdate'), last_response.body
+    assert_equal [
+      {
+        'omaha_report' => {
+          'host' => 'localhost',
+          'status' => 'complete',
+          'omaha_version' => '1122.2.0',
+          'machineid' => '8e9450f47a4c47adbfe48b946e201c84',
+          'omaha_group' => 'stable',
+          'oem' => 'vmware',
+          'reported_at' => 'fake_timestamp'
+        }
+      }
+    ], TestForemanClient.requests[:reports]
   end
 
   def test_processes_update_complete_update

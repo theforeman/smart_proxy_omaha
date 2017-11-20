@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <request protocol="3.0" version="CoreOSUpdateEngine-0.1.0.0" updaterversion="CoreOSUpdateEngine-0.1.0.0" installsource="ondemandupdate" ismachine="1">
   <os version="Chateau" platform="CoreOS" sp="1122.2.0_x86_64"></os>
-  <app appid="{e96281a6-d1af-4bde-9a0a-97b76e56dc57}" version="1122.2.0" track="stable" bootid="{5c43ee37-70da-48b7-9328-636618c2807c}" oem="" oemversion="" alephversion="1010.5.0" machineid="8e9450f47a4c47adbfe48b946e201c84" lang="en-US" board="amd64-usr" hardware_class="" delta_okay="false" >
+  <app appid="{e96281a6-d1af-4bde-9a0a-97b76e56dc57}" version="1122.2.0" track="stable" bootid="{5c43ee37-70da-48b7-9328-636618c2807c}" oem="vmware" oemversion="10.1.10" alephversion="1010.5.0" machineid="8e9450f47a4c47adbfe48b946e201c84" lang="en-US" board="amd64-usr" hardware_class="" delta_okay="false" >
     <ping active="1"></ping>
     <updatecheck></updatecheck>
     <event eventtype="3" eventresult="2" previousversion=""></event>
