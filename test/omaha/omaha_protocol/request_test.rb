@@ -22,6 +22,7 @@ class RequestTest < Test::Unit::TestCase
     assert_equal '', @request.oemversion
     assert_equal '', @request.oem
     assert_equal 'CoreOS', @request.platform
+    assert_equal '8e9450f47a4c47adbfe48b946e201c84', @request.machineid
     assert_equal 3, @request.eventtype
     assert_equal 2, @request.eventresult
     assert @request.updatecheck

@@ -86,7 +86,10 @@ module Proxy::Omaha::OmahaProtocol
         'host' => request.hostname,
         'status' => request.to_status.to_s,
         'omaha_version' => request.version,
-        'reported_at' => Time.now.getutc.to_s
+        'machineid' => request.machineid,
+        'omaha_group' => request.track,
+        'oem' => request.oem,
+        'reported_at' => report_timestamp
       }
       foreman_client.post_report({'omaha_report' => report}.to_json)
     end
@@ -108,6 +111,10 @@ module Proxy::Omaha::OmahaProtocol
           :base_url => request.base_url
         )
       end
+    end
+
+    def report_timestamp
+      Time.now.getutc.to_s
     end
   end
 end
