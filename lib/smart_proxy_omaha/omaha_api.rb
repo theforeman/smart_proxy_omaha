@@ -50,5 +50,11 @@ module Proxy::Omaha
         )
       end.to_json
     end
+
+    get '/ca' do
+      not_found if Proxy::SETTINGS.ssl_ca_file.nil? || Proxy::SETTINGS.ssl_ca_file.empty? || !File.exists?(Proxy::SETTINGS.ssl_ca_file)
+      content_type 'text/plain'
+      File.read(Proxy::SETTINGS.ssl_ca_file)
+    end
   end
 end
