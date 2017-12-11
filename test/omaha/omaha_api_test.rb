@@ -151,4 +151,18 @@ class OmahaApiTest < Test::Unit::TestCase
     assert_kind_of Array, parsed
     assert_equal ['1068.9.0', '1122.2.0'], parsed.map { |track| track['name'] }
   end
+
+  def test_ca
+    Proxy::SETTINGS.stubs(:ssl_ca_file).returns(File.expand_path('../../fixtures/ca.crt', __FILE__))
+    get '/ca'
+    assert last_response.ok?, "Last response was not ok: #{last_response.status} #{last_response.body}"
+    body = last_response.body
+    assert_includes body, 'CERTIFICATE'
+  end
+
+  def test_ca_not_found
+    Proxy::SETTINGS.stubs(:ssl_ca_file).returns(File.expand_path('../../fixtures/noca.crt', __FILE__))
+    get '/ca'
+    assert_equal 404, last_response.status
+  end
 end
