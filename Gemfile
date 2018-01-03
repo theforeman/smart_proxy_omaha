@@ -7,16 +7,28 @@ group :development do
 end
 
 group :test do
-  gem 'rack-test'
   gem 'single_test'
   gem 'test_xml'
 
-  if RUBY_VERSION < '1.9.3'
-    gem 'webmock', '< 2.0.0'
+  if RUBY_VERSION < '2.1'
+    gem 'public_suffix', '< 3'
+    gem 'nokogiri', '< 1.7'
   else
-    gem 'webmock'
+    gem 'public_suffix'
+    gem 'nokogiri'
+  end
+
+  if RUBY_VERSION < '2.2'
+    gem 'rack-test', '< 0.8'
+  else
+    gem 'rack-test'
   end
 end
 
-gem 'addressable', '< 2.2.0', :platforms => :ruby_18
-gem 'json', '~> 1.0', :platforms => [:ruby_18, :ruby_19]
+if RUBY_VERSION < '2.2'
+  gem 'sinatra', '< 2'
+  gem 'rack', '>= 1.1', '< 2.0.0'
+else
+  gem 'sinatra'
+  gem 'rack', '>= 1.1'
+end
