@@ -16,8 +16,10 @@ Gem::Specification.new do |s|
 
   if RUBY_VERSION < '1.9'
     s.add_dependency('nokogiri', '<= 1.5.11')
+  elsif RUBY_VERSION < '2.1'
+    s.add_dependency('nokogiri', '>= 1.5.11')
   else
-    s.add_dependency('nokogiri', '>= 1.5.10')
+    s.add_dependency('nokogiri', '>= 1.8.1')
   end
   s.add_dependency('json')
 
