@@ -84,6 +84,7 @@ module Proxy::Omaha::OmahaProtocol
     def parse_ipaddress
       ipaddr = IPAddr.new(ip) rescue nil
       return if ipaddr.nil?
+      ipaddr = IPAddr.new(ipaddr.to_s.sub('::ffff:', '')) if ipaddr.ipv4_mapped?
       @ipaddress = ipaddr.to_s if ipaddr.ipv4?
       @ipaddress6 = ipaddr.to_s if ipaddr.ipv6?
       @hostname = lookup_hostname(ipaddr.to_s)

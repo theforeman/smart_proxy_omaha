@@ -79,5 +79,14 @@ class RequestTest < Test::Unit::TestCase
 
     assert_nil request6.ipaddress
     assert_equal '2001:db8::1', request6.ipaddress6
+
+    request64 = Proxy::Omaha::OmahaProtocol::Request.new(
+      xml_fixture('request_update_complete_update'),
+      :ip => '::ffff:1.1.1.1',
+      :base_url => 'http://www.example.org/'
+    )
+
+    assert_equal '1.1.1.1', request64.ipaddress
+    assert_nil request64.ipaddress6
   end
 end
