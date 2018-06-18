@@ -14,13 +14,7 @@ Gem::Specification.new do |s|
   s.homepage = 'http://github.com/theforeman/smart_proxy_omaha'
   s.license = 'GPLv3'
 
-  if RUBY_VERSION < '1.9'
-    s.add_dependency('nokogiri', '<= 1.5.11')
-  elsif RUBY_VERSION < '2.1'
-    s.add_dependency('nokogiri', '>= 1.5.11')
-  else
-    s.add_dependency('nokogiri', '>= 1.8.1')
-  end
+  s.add_dependency('nokogiri', '>= 1.5.11')
   s.add_dependency('json')
 
   s.add_development_dependency('test-unit', '~> 2')
