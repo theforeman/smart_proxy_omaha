@@ -11,8 +11,8 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ['README.md', 'LICENSE']
   s.files = `git ls-files`.split("\n") - ['.gitignore']
   s.executables = ['smart-proxy-omaha-sync']
-  s.homepage = 'http://github.com/theforeman/smart_proxy_omaha'
-  s.license = 'GPLv3'
+  s.homepage = 'https://github.com/theforeman/smart_proxy_omaha'
+  s.license = 'GPL-3.0'
 
   s.add_dependency('nokogiri', '>= 1.5.11')
   s.add_dependency('json')
