@@ -2,4 +2,5 @@
 :enabled: true
 :contentpath: '/var/lib/foreman-proxy/omaha/content'
 :sync_releases: 2
+:distribution: coreos
 #:proxy: 'http://127.0.0.1:3128'

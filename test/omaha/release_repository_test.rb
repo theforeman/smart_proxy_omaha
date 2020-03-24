@@ -5,12 +5,10 @@ require 'smart_proxy_omaha/release_repository'
 class ReleaseRepositoryTest < Test::Unit::TestCase
   def setup
     @contentpath = Dir.mktmpdir
-    Proxy::Omaha::Plugin.load_test_settings(
-      {
-        :contentpath => @contentpath
-      }
+    @repository = Proxy::Omaha::ReleaseRepository.new(
+      :contentpath => @contentpath,
+      :distribution => ::Proxy::Omaha::Distribution::Coreos.new
     )
-    @repository = Proxy::Omaha::ReleaseRepository.new
   end
 
   def teardown

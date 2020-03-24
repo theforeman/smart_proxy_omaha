@@ -1,6 +1,7 @@
 require 'test_helper'
 require 'smart_proxy_omaha/configuration_loader'
 require 'smart_proxy_omaha/omaha_plugin'
+require 'smart_proxy_omaha/distribution'
 
 ENV['RACK_ENV'] = 'test'
 
@@ -30,6 +31,7 @@ class TestReleaseRepository
   def releases(track, architecture)
     ['1068.9.0', '1122.2.0'].map do |release|
       Proxy::Omaha::Release.new(
+        :distribution => ::Proxy::Omaha::Distribution::Coreos.new,
         :track => 'alpha',
         :architecture => 'amd64-usr',
         :version => release

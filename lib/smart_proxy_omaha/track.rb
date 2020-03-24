@@ -1,7 +1,7 @@
 module Proxy
   module Omaha
     module Track
-      TRACKS = ['alpha', 'beta', 'stable'].freeze
+      TRACKS = ['alpha', 'beta', 'stable'].freeze # edge
 
       def self.all
         TRACKS

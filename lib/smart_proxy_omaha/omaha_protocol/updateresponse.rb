@@ -5,7 +5,7 @@ module Proxy::Omaha::OmahaProtocol
     def initialize(options = {})
       @metadata = options.fetch(:metadata)
       @architecture = options.fetch(:board)
-      @name = 'update.gz'
+      @name = options.fetch(:name)
       @size = metadata.size
       @sha1_b64 = metadata.sha1_b64
       @sha256_b64 = metadata.sha256_b64

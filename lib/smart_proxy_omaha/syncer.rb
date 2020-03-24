@@ -1,6 +1,7 @@
 require 'smart_proxy_omaha/release'
 require 'smart_proxy_omaha/track'
 require 'smart_proxy_omaha/release_provider'
+require 'smart_proxy_omaha/distribution'
 
 module Proxy::Omaha
   class Syncer
@@ -46,10 +47,15 @@ module Proxy::Omaha
       Proxy::Omaha::Plugin.settings.sync_releases.to_i
     end
 
+    def distribution
+      Proxy::Omaha::Plugin.settings.distribution
+    end
+
     def release_provider(track)
       @release_provider ||= {}
       @release_provider[track] ||= ReleaseProvider.new(
-        :track => track
+        :track => track,
+        :distribution => ::Proxy::Omaha::Distribution.new(distribution)
       )
     end
   end

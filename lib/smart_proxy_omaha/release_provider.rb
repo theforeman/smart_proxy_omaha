@@ -1,6 +1,5 @@
 require 'nokogiri'
 require 'fileutils'
-require 'smart_proxy_omaha/http_request'
 require 'smart_proxy_omaha/release'
 
 module Proxy::Omaha
@@ -8,12 +7,12 @@ module Proxy::Omaha
     include ::Proxy::Log
     include HttpShared
 
-    attr_accessor :track
-    attr_accessor :architecture
+    attr_reader :track, :architecture, :distribution
 
     def initialize(options)
       @track = options.fetch(:track)
       @architecture = options.fetch(:architecture, 'amd64-usr')
+      @distribution = options.fetch(:distribution)
     end
 
     def releases
@@ -21,19 +20,12 @@ module Proxy::Omaha
     end
 
     def fetch_releases
-      releases = http_request.get("https://#{track}.release.core-os.net/#{architecture}/")
-      xml = Nokogiri::HTML(releases)
-      parsed = (xml.xpath('//a/text()').map(&:to_s) - ['current']).map do |v|
-        Proxy::Omaha::Release.new(:version => v, :track => track, :architecture => architecture)
+      releases = distribution.releases(track, architecture)
+      release_objects = releases.map do |version|
+        Proxy::Omaha::Release.new(:distribution => distribution, :version => version, :track => track, :architecture => architecture)
       end.sort
-      logger.debug "Fetched releases for #{architecture}/#{track}: #{parsed.map(&:to_s).join(', ')}"
-      parsed
-    end
-
-    private
-
-    def http_request
-      @http_request ||= ::Proxy::Omaha::HttpRequest.new
+      logger.debug "Fetched releases for #{architecture}/#{track}: #{release_objects.map(&:to_s).join(', ')}"
+      release_objects
     end
   end
 end
