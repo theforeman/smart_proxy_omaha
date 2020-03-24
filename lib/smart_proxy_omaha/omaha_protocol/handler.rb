@@ -102,7 +102,8 @@ module Proxy::Omaha::OmahaProtocol
           :appid => request.appid,
           :metadata => metadata_provider.get(request.track, latest_os, request.board),
           :board => request.board,
-          :base_url => request.base_url
+          :base_url => request.base_url,
+          :name => latest_os.update_filename
         )
       else
         logger.info "OmahaHandler: No update."

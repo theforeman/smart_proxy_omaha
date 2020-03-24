@@ -2,15 +2,17 @@ require 'fileutils'
 require 'digest/md5'
 require 'smart_proxy_omaha/http_download'
 require 'smart_proxy_omaha/metadata_provider'
+require 'smart_proxy_omaha/distribution'
 
 module Proxy::Omaha
   class Release
     include Proxy::Log
 
-    attr_accessor :track, :version, :architecture
+    attr_accessor :distribution, :track, :version, :architecture
     attr_writer :digests
 
     def initialize(options)
+      @distribution = options.fetch(:distribution)
       @track = options.fetch(:track).to_s
       @architecture = options.fetch(:architecture)
       @version = Gem::Version.new(options.fetch(:version))
@@ -108,26 +110,32 @@ module Proxy::Omaha
       false
     end
 
+    def update_filename
+      distribution.update_filename
+    end
+
     def updatefile
-      File.join(path, 'update.gz')
+      File.join(path, update_filename)
     end
 
     def sources
-      upstream = "https://#{track}.release.core-os.net/#{architecture}/#{version}"
+      upstream = distribution.upstream(track, architecture, version)
+      update_upstream = distribution.update_upstream(architecture, version)
+      prefix = distribution.prefix
       [
-        "#{upstream}/coreos_production_pxe.vmlinuz",
-        "#{upstream}/coreos_production_pxe.DIGESTS",
-        "#{upstream}/coreos_production_image.bin.bz2",
-        "#{upstream}/coreos_production_image.bin.bz2.sig",
-        "#{upstream}/coreos_production_image.bin.bz2.DIGESTS",
-        "#{upstream}/coreos_production_pxe_image.cpio.gz",
-        "#{upstream}/coreos_production_pxe_image.cpio.gz.DIGESTS",
-        "#{upstream}/coreos_production_vmware_raw_image.bin.bz2",
-        "#{upstream}/coreos_production_vmware_raw_image.bin.bz2.sig",
-        "#{upstream}/coreos_production_vmware_raw_image.bin.bz2.DIGESTS",
+        "#{upstream}/#{prefix}_production_pxe.vmlinuz",
+        "#{upstream}/#{prefix}_production_pxe.DIGESTS",
+        "#{upstream}/#{prefix}_production_image.bin.bz2",
+        "#{upstream}/#{prefix}_production_image.bin.bz2.sig",
+        "#{upstream}/#{prefix}_production_image.bin.bz2.DIGESTS",
+        "#{upstream}/#{prefix}_production_pxe_image.cpio.gz",
+        "#{upstream}/#{prefix}_production_pxe_image.cpio.gz.DIGESTS",
+        "#{upstream}/#{prefix}_production_vmware_raw_image.bin.bz2",
+        "#{upstream}/#{prefix}_production_vmware_raw_image.bin.bz2.sig",
+        "#{upstream}/#{prefix}_production_vmware_raw_image.bin.bz2.DIGESTS",
         "#{upstream}/version.txt",
         "#{upstream}/version.txt.DIGESTS",
-        "https://update.release.core-os.net/#{architecture}/#{version}/update.gz"
+        "#{update_upstream}/#{update_filename}"
       ]
     end
 

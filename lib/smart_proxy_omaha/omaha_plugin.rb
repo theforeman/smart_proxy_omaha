@@ -1,3 +1,5 @@
+require 'smart_proxy_omaha/plugin_validators'
+
 module Proxy::Omaha
   class NotFound < RuntimeError; end
 
@@ -10,9 +12,14 @@ module Proxy::Omaha
     load_classes ::Proxy::Omaha::ConfigurationLoader
     load_dependency_injection_wirings ::Proxy::Omaha::ConfigurationLoader
 
+    load_validators :distribution_validator => ::Proxy::Omaha::PluginValidators::DistributionValidator
+
     default_settings :sync_releases => 0,
-      :contentpath => '/var/lib/foreman-proxy/omaha/content'
+      :contentpath => '/var/lib/foreman-proxy/omaha/content',
+      :distribution => 'coreos'
 
     validate_readable :contentpath
+
+    validate :distribution, :distribution_validator => true
   end
 end

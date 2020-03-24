@@ -2,6 +2,7 @@ require 'test_helper'
 require 'fileutils'
 require 'tmpdir'
 require 'smart_proxy_omaha/release'
+require 'smart_proxy_omaha/distribution'
 
 class ReleaseTest < Test::Unit::TestCase
 
@@ -13,6 +14,7 @@ class ReleaseTest < Test::Unit::TestCase
       }
     )
     @release = Proxy::Omaha::Release.new(
+      :distribution => ::Proxy::Omaha::Distribution::Coreos.new,
       :track => :stable,
       :architecture => 'amd64-usr',
       :version => '1068.9.0'
@@ -56,11 +58,13 @@ class ReleaseTest < Test::Unit::TestCase
 
   def test_compare
     older = Proxy::Omaha::Release.new(
+      :distribution => ::Proxy::Omaha::Distribution::Coreos.new,
       :track => :stable,
       :architecture => 'amd64-usr',
       :version => '100.0.0'
     )
     newer = Proxy::Omaha::Release.new(
+      :distribution => ::Proxy::Omaha::Distribution::Coreos.new,
       :track => :stable,
       :architecture => 'amd64-usr',
       :version => '2000.0.0'
@@ -72,6 +76,7 @@ class ReleaseTest < Test::Unit::TestCase
 
   def test_equality
     other = Proxy::Omaha::Release.new(
+      :distribution => ::Proxy::Omaha::Distribution::Coreos.new,
       :track => :stable,
       :architecture => 'amd64-usr',
       :version => '100.0.0'
@@ -152,6 +157,7 @@ class ReleaseTest < Test::Unit::TestCase
   def test_current_release_update
     FileUtils.mkdir_p(@release.path)
     older = Proxy::Omaha::Release.new(
+      :distribution => ::Proxy::Omaha::Distribution::Coreos.new,
       :track => :stable,
       :architecture => 'amd64-usr',
       :version => '100.0.0'
