@@ -12,6 +12,7 @@ module Proxy::Omaha
     inject_attr :foreman_client_impl, :foreman_client
     inject_attr :release_repository_impl, :release_repository
     inject_attr :metadata_provider_impl, :metadata_provider
+    inject_attr :distribution_impl, :distribution
 
     post '/v1/update' do
       request.body.rewind
@@ -19,7 +20,8 @@ module Proxy::Omaha
       omaha_request = Proxy::Omaha::OmahaProtocol::Request.new(
         request_body,
         :ip => request.ip,
-        :base_url => request.base_url
+        :base_url => request.base_url,
+        :distribution => distribution.identifier
       )
       omaha_handler = Proxy::Omaha::OmahaProtocol::Handler.new(
         :request => omaha_request,

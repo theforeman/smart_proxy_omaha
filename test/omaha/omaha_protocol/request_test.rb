@@ -8,7 +8,8 @@ class RequestTest < Test::Unit::TestCase
     @request = Proxy::Omaha::OmahaProtocol::Request.new(
       xml_fixture('request_update_complete_update'),
       :ip => '1.1.1.1',
-      :base_url => 'http://www.example.org/'
+      :base_url => 'http://www.example.org/',
+      :distribution => 'coreos'
     )
   end
 
@@ -44,6 +45,7 @@ class RequestTest < Test::Unit::TestCase
         :alephversion => '1010.5.0',
         :appid => 'e96281a6-d1af-4bde-9a0a-97b76e56dc57',
         :board => 'amd64-usr',
+        :distribution => 'coreos',
         :hostname => 'omaha.example.com',
         :ipaddress => '1.1.1.1',
         :ipaddress6 => nil,
@@ -74,7 +76,8 @@ class RequestTest < Test::Unit::TestCase
     request6 = Proxy::Omaha::OmahaProtocol::Request.new(
       xml_fixture('request_update_complete_update'),
       :ip => '2001:db8::1',
-      :base_url => 'http://www.example.org/'
+      :base_url => 'http://www.example.org/',
+      :distribution => 'coreos'
     )
 
     assert_nil request6.ipaddress
@@ -83,7 +86,8 @@ class RequestTest < Test::Unit::TestCase
     request64 = Proxy::Omaha::OmahaProtocol::Request.new(
       xml_fixture('request_update_complete_update'),
       :ip => '::ffff:1.1.1.1',
-      :base_url => 'http://www.example.org/'
+      :base_url => 'http://www.example.org/',
+      :distribution => 'coreos'
     )
 
     assert_equal '1.1.1.1', request64.ipaddress
