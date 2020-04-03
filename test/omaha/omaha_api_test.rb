@@ -75,6 +75,9 @@ module Proxy::Omaha
         c.singleton_dependency :foreman_client_impl, TestForemanClient
         c.singleton_dependency :release_repository_impl, TestReleaseRepository
         c.singleton_dependency :metadata_provider_impl, TestMetadataProvider
+        c.singleton_dependency :distribution_impl, (lambda do
+          ::Proxy::Omaha::Distribution::Coreos.new
+        end)
       end
     end
   end

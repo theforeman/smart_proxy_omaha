@@ -23,6 +23,10 @@ module Proxy
       end
 
       class Coreos < Base
+        def identifier
+          :coreos
+        end
+
         def prefix
           'coreos'
         end
@@ -47,6 +51,10 @@ module Proxy
       end
 
       class Flatcar < Base
+        def identifier
+          :flatcar
+        end
+
         def prefix
           'flatcar'
         end

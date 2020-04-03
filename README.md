@@ -39,7 +39,8 @@ vim /etc/ssl/certs/customCA_root.pem
 sudo /usr/sbin/update-ca-certificates
 ```
 
-To configure CoreOS to connect to the Omaha smart-proxy for updates, edit `/etc/coreos/update.conf`:
+To configure CoreOS to connect to the Omaha smart-proxy for updates, edit `/etc/coreos/update.conf`,
+to configure Flatcar to connect to the Omaha smart-proxy for updates, edit `/etc/flatcar/update.conf`:
 
 ```
 GROUP=stable
@@ -111,10 +112,18 @@ $ journalctl -u update-engine.service
 In the settings file you can specify a http proxy that is used to download Omaha content.
 You need to allow https access to these servers:
 
+For CoreOS:
 * alpha.release.core-os.net
 * beta.release.core-os.net
 * stable.release.core-os.net
 * update.release.core-os.net
+
+For Flatcar:
+* www.flatcar-linux.org
+* alpha.release.flatcar-linux.net
+* beta.release.flatcar-linux.net
+* stable.release.flatcar-linux.net
+* update.release.flatcar-linux.net
 
 ## Make it High Available
 

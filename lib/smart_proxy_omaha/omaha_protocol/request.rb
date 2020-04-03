@@ -6,12 +6,13 @@ module Proxy::Omaha::OmahaProtocol
     attr_reader :appid, :version, :track, :updatecheck, :eventtype, :eventresult, :board,
       :alephversion, :oemversion, :oem, :machineid,
       :platform, :osmajor, :osminor, :hostname, :ipaddress, :ipaddress6,
-      :body, :ip, :base_url, :ping
+      :body, :ip, :base_url, :ping, :distribution
 
     def initialize(body, options)
       @body = body
       @ip = options.fetch(:ip)
       @base_url = options.fetch(:base_url)
+      @distribution = options.fetch(:distribution)
       parse_request
       parse_ipaddress
       raise "Could not determine request hostname." if hostname.nil?
@@ -111,7 +112,8 @@ module Proxy::Omaha::OmahaProtocol
         :ipaddress => ipaddress,
         :ipaddress6 => ipaddress6,
         :hostname => hostname,
-        :machineid => machineid
+        :machineid => machineid,
+        :distribution => distribution
       }
     end
   end
