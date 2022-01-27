@@ -69,7 +69,7 @@ class ReleaseProviderTest < Test::Unit::TestCase
       distribution: distribution
     )
 
-    stub_request(:get, 'https://www.flatcar-linux.org/releases-json/releases-stable.json')
+    stub_request(:get, 'https://www.flatcar.org/releases-json/releases-stable.json')
       .to_return(status: [200, 'OK'], body: fixture('flatcar_releases-stable.json'))
 
     expected = ['1688.5.3', '1745.3.1', '1745.4.0', '1745.5.0', '1745.6.0', '1745.7.0', '1800.4.0', '1800.5.0', '1800.6.0', '1800.7.0', '1855.4.0', '1855.4.2', '1855.5.0', '1911.3.0', '1911.4.0', '1911.5.0', '1967.3.0', '1967.3.1', '1967.4.0', '1967.5.0', '1967.6.0', '2023.4.0', '2023.5.0', '2079.3.0', '2079.3.1', '2079.3.2', '2079.4.0', '2079.5.0', '2079.6.0', '2135.4.0', '2135.5.0', '2135.6.0', '2191.4.0', '2191.4.1', '2191.5.0', '2247.5.0', '2247.6.0', '2247.7.0', '2303.3.0', '2303.3.1', '2303.4.0', '2345.3.0']

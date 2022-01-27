@@ -120,6 +120,7 @@ For CoreOS:
 
 For Flatcar:
 * www.flatcar-linux.org
+* www.flatcar.org
 * alpha.release.flatcar-linux.net
 * beta.release.flatcar-linux.net
 * stable.release.flatcar-linux.net

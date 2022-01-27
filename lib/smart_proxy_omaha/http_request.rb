@@ -6,10 +6,8 @@ module Proxy::Omaha
     include HttpShared
 
     def get(url)
-      http, request = connection_factory(url)
-
       Timeout::timeout(10) do
-        response = http.request(request)
+        response = get_recursive(url)
 
         raise "Error retrieving from #{url}: #{response.class}" unless ["200", "201"].include?(response.code)
 
@@ -18,10 +16,8 @@ module Proxy::Omaha
     end
 
     def head(url)
-      http, request = connection_factory(url, :method => :head)
-
       Timeout::timeout(10) do
-        response = http.request(request)
+        response = get_recursive(url, opts = {:method => :head})
 
         raise "Error retrieving from #{url}: #{response.class}" unless ["200", "201"].include?(response.code)
 
