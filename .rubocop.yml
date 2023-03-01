@@ -1,0 +1,65 @@
+require:
+  - rubocop-performance
+  - rubocop-rake
+
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  TargetRubyVersion: '2.5'
+
+Layout/LineLength:
+  Enabled: false
+
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
+
+Lint/BinaryOperatorWithIdenticalOperands:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+# Configuration parameters: CountComments, CountAsOne.
+Metrics/ClassLength:
+  Enabled: false
+
+# Configuration parameters: IgnoredMethods.
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+# Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
+Metrics/MethodLength:
+  Enabled: false
+
+# Configuration parameters: IgnoredMethods.
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Naming/MethodParameterName:
+  Enabled: false
+
+
+Style/CaseEquality:
+  Enables: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/ClassVars:
+  Enabled: false
+
+Style/CaseEquality:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: false
+
+Style/HashSyntax:
+  Enabled: false
+
+Style/MixinUsage:
+  Enabled: false
+
+Style/MultilineBlockChain:
+  Enabled: false
+

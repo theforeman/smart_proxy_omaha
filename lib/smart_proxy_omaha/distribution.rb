@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'smart_proxy_omaha/http_request'
 
 module Proxy
@@ -10,7 +12,7 @@ module Proxy
         when 'flatcar'
           Flatcar.new
         else
-          raise "Unsupported distribution."
+          raise 'Unsupported distribution.'
         end
       end
 
@@ -74,7 +76,9 @@ module Proxy
         def releases(track, architecture)
           feed_data = http_request.get("https://www.flatcar-linux.org/releases-json/releases-#{track}.json")
           json_feed = JSON.parse(feed_data)
-          json_feed.select { |_, release| release['architectures'].include?(architecture.split('-').first) }.keys - ['current']
+          json_feed.select do |_, release|
+            release['architectures'].include?(architecture.split('-').first)
+          end.keys - ['current']
         end
       end
     end

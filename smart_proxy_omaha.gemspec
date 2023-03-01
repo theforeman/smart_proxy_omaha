@@ -1,4 +1,6 @@
-require File.expand_path('../lib/smart_proxy_omaha/version', __FILE__)
+# frozen_string_literal: true
+
+require File.expand_path('lib/smart_proxy_omaha/version', __dir__)
 
 Gem::Specification.new do |s|
   s.name = 'smart_proxy_omaha'
@@ -14,12 +16,14 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/theforeman/smart_proxy_omaha'
   s.license = 'GPL-3.0'
 
-  s.add_dependency('nokogiri', '>= 1.5.11')
   s.add_dependency('json')
+  s.add_dependency('nokogiri', '>= 1.5.11')
 
-  s.add_development_dependency('test-unit', '~> 2')
+  s.required_ruby_version = '>= 2.5', '< 4'
+
   s.add_development_dependency('mocha', '~> 1')
-  s.add_development_dependency('webmock', '~> 1')
   s.add_development_dependency('rack-test')
   s.add_development_dependency('rake', '~> 10')
+  s.add_development_dependency('test-unit', '~> 3')
+  s.add_development_dependency('webmock', '~> 1')
 end
