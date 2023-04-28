@@ -4,9 +4,9 @@ require 'ipaddr'
 module Proxy::Omaha::OmahaProtocol
   class Request
     attr_reader :appid, :version, :track, :updatecheck, :eventtype, :eventresult, :board,
-      :alephversion, :oemversion, :oem, :machineid,
-      :platform, :osmajor, :osminor, :hostname, :ipaddress, :ipaddress6,
-      :body, :ip, :base_url, :ping, :distribution
+                :alephversion, :oemversion, :oem, :machineid,
+                :platform, :osmajor, :osminor, :hostname, :ipaddress, :ipaddress6,
+                :body, :ip, :base_url, :ping, :distribution
 
     def initialize(body, options)
       @body = body
@@ -21,7 +21,7 @@ module Proxy::Omaha::OmahaProtocol
     def facts_data
       {
         :name => hostname,
-        :facts => to_facts.merge({:_type => :foreman_omaha, :_timestamp => Time.now})
+        :facts => to_facts.merge({ :_type => :foreman_omaha, :_timestamp => Time.now }),
       }
     end
 
@@ -83,7 +83,11 @@ module Proxy::Omaha::OmahaProtocol
     end
 
     def parse_ipaddress
-      ipaddr = IPAddr.new(ip) rescue nil
+      begin
+        ipaddr = IPAddr.new(ip)
+      rescue StandardError
+        return
+      end
       return if ipaddr.nil?
       ipaddr = IPAddr.new(ipaddr.to_s.sub('::ffff:', '')) if ipaddr.ipv4_mapped?
       @ipaddress = ipaddr.to_s if ipaddr.ipv4?
@@ -113,7 +117,7 @@ module Proxy::Omaha::OmahaProtocol
         :ipaddress6 => ipaddress6,
         :hostname => hostname,
         :machineid => machineid,
-        :distribution => distribution
+        :distribution => distribution,
       }
     end
   end

@@ -30,7 +30,7 @@ class MetadataProviderTest < Test::Unit::TestCase
       :sha1_b64 => 'foo',
       :sha256_b64 => 'bar',
       :size => '123',
-      :track => 'stable'
+      :track => 'stable',
     }
   end
 end

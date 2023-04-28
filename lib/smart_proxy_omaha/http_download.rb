@@ -1,4 +1,3 @@
-require 'thread'
 require 'base64'
 require 'smart_proxy_omaha/http_shared'
 require 'smart_proxy_omaha/http_verify'
@@ -70,7 +69,7 @@ module Proxy::Omaha
       @verifier ||= HttpVerify.new(
         :local_file => tmp,
         :http_request => http_response,
-        :filename => filename,
+        :filename => filename
       )
     end
 

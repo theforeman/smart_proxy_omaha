@@ -3,7 +3,6 @@ require 'smart_proxy_omaha/omaha_protocol'
 require 'smart_proxy_omaha/release_repository'
 
 module Proxy::Omaha
-
   class Api < ::Sinatra::Base
     extend Proxy::Omaha::DependencyInjection
 
@@ -38,7 +37,7 @@ module Proxy::Omaha
       release_repository.tracks.map do |track|
         {
           :name => track,
-          :architectures => release_repository.architectures(track)
+          :architectures => release_repository.architectures(track),
         }
       end.to_json
     end

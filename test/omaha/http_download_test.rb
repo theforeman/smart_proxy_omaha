@@ -21,7 +21,7 @@ class HttpDownloadTest < Test::Unit::TestCase
       :body => 'body',
       headers: {
         'Content-Length' => 4,
-        'x-goog-hash' => 'md5=hBotaJrYa9FhFEdFPCLG/A=='
+        'x-goog-hash' => 'md5=hBotaJrYa9FhFEdFPCLG/A==',
       }
     )
 
