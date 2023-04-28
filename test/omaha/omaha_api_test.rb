@@ -118,9 +118,9 @@ class OmahaApiTest < Test::Unit::TestCase
           'machineid' => '8e9450f47a4c47adbfe48b946e201c84',
           'omaha_group' => 'stable',
           'oem' => 'vmware',
-          'reported_at' => 'fake_timestamp'
-        }
-      }
+          'reported_at' => 'fake_timestamp',
+        },
+      },
     ], TestForemanClient.requests[:reports]
   end
 

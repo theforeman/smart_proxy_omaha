@@ -24,13 +24,13 @@ module Proxy::Omaha
       end
 
       request_class = case method
-                        when :get
-                          Net::HTTP::Get
-                        when :head
-                          Net::HTTP::Head
-                        else
-                          raise "Unknown request class"
-                        end
+                      when :get
+                        Net::HTTP::Get
+                      when :head
+                        Net::HTTP::Head
+                      else
+                        raise "Unknown request class"
+                      end
       request = request_class.new(uri.request_uri)
 
       [http, request]

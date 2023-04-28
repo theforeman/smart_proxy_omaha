@@ -10,7 +10,7 @@ class ReleaseTest < Test::Unit::TestCase
     @contentpath = Dir.mktmpdir
     Proxy::Omaha::Plugin.load_test_settings(
       {
-        :contentpath => @contentpath
+        :contentpath => @contentpath,
       }
     )
     @release = Proxy::Omaha::Release.new(
@@ -96,7 +96,7 @@ class ReleaseTest < Test::Unit::TestCase
       :body => 'body',
       headers: {
         'Content-Length' => 4,
-        'x-goog-hash' => 'md5=hBotaJrYa9FhFEdFPCLG/A=='
+        'x-goog-hash' => 'md5=hBotaJrYa9FhFEdFPCLG/A==',
       }
     )
 
@@ -176,7 +176,7 @@ class ReleaseTest < Test::Unit::TestCase
     File.open(File.join(@release.path, "update.gz"), 'w') { |file| file.write('body') }
     File.open(File.join(@release.path, "update.gz.DIGESTS"), 'w') { |file| file.write("841a2d689ad86bd1611447453c22c6fc  update.gz\n") }
     expected = {
-      'update.gz' => ['841a2d689ad86bd1611447453c22c6fc']
+      'update.gz' => ['841a2d689ad86bd1611447453c22c6fc'],
     }
     assert_equal expected, @release.digests
     assert_equal true, @release.valid?
@@ -205,7 +205,7 @@ class ReleaseTest < Test::Unit::TestCase
       'coreos_production_vmware_raw_image.bin.bz2.DIGESTS',
       'update.gz',
       'version.txt',
-      'version.txt.DIGESTS'
+      'version.txt.DIGESTS',
     ]
   end
 end

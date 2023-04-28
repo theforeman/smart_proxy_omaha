@@ -91,22 +91,22 @@ module Proxy::Omaha
 
     def create_metadata
       metadata_provider.store(Metadata.new(
-        :track => track,
-        :release => version.to_s,
-        :architecture => architecture,
-        :size => File.size(updatefile),
-        :sha1_b64 => Digest::SHA1.file(updatefile).base64digest,
-        :sha256_b64 => Digest::SHA256.file(updatefile).base64digest
-      ))
+                                :track => track,
+                                :release => version.to_s,
+                                :architecture => architecture,
+                                :size => File.size(updatefile),
+                                :sha1_b64 => Digest::SHA1.file(updatefile).base64digest,
+                                :sha256_b64 => Digest::SHA256.file(updatefile).base64digest
+                              ))
       true
-    rescue
+    rescue StandardError
       false
     end
 
     def create_path
       FileUtils.mkdir_p(path)
       true
-    rescue
+    rescue StandardError
       false
     end
 
@@ -135,7 +135,7 @@ module Proxy::Omaha
         "#{upstream}/#{prefix}_production_vmware_raw_image.bin.bz2.DIGESTS",
         "#{upstream}/version.txt",
         "#{upstream}/version.txt.DIGESTS",
-        "#{update_upstream}/#{update_filename}"
+        "#{update_upstream}/#{update_filename}",
       ]
     end
 
@@ -167,7 +167,7 @@ module Proxy::Omaha
       FileUtils.rm(Dir.glob(File.join(path, '*')), :force => true)
       FileUtils.remove_dir(path)
       true
-    rescue
+    rescue StandardError
       false
     end
 
@@ -196,7 +196,7 @@ module Proxy::Omaha
         :architecture => architecture,
         :track => track,
         :complete => complete?,
-        :files => existing_files
+        :files => existing_files,
       }
     end
 

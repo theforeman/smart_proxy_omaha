@@ -56,9 +56,9 @@ class RequestTest < Test::Unit::TestCase
         :osminor => '9.0',
         :platform => 'CoreOS',
         :track => 'stable',
-        :version =>'1068.9.0'
+        :version => '1068.9.0',
       },
-      :name => 'omaha.example.com'
+      :name => 'omaha.example.com',
     }
     received = @request.facts_data
     received[:facts][:_timestamp] = 'now'

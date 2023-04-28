@@ -77,7 +77,7 @@ module Proxy::Omaha::OmahaProtocol
       Proxy::Omaha::OmahaProtocol::Errorinternalresponse.new(
         :appid => request.appid,
         :base_url => request.base_url,
-        :status => 'error-internal',
+        :status => 'error-internal'
       )
     end
 
@@ -89,9 +89,9 @@ module Proxy::Omaha::OmahaProtocol
         'machineid' => request.machineid,
         'omaha_group' => request.track,
         'oem' => request.oem,
-        'reported_at' => report_timestamp
+        'reported_at' => report_timestamp,
       }
-      foreman_client.post_report({'omaha_report' => report}.to_json)
+      foreman_client.post_report({ 'omaha_report' => report }.to_json)
     end
 
     def handle_update

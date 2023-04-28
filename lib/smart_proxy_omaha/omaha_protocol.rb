@@ -22,7 +22,7 @@ module Proxy::Omaha::OmahaProtocol
     4 => 'uninstall',
     5 => 'download started',
     6 => 'install started',
-    9 =>  'new application install started',
+    9 => 'new application install started',
     10 => 'setup started',
     11 => 'setup finished',
     12 => 'update application started',
@@ -38,21 +38,21 @@ module Proxy::Omaha::OmahaProtocol
     100 => 'setup failure',
     102 => 'COM server failure',
     103 => 'setup update failure',
-    800 => 'ping'
+    800 => 'ping',
   }.freeze
 
   EVENT_RESULTS = {
-    0 =>  'error',
-    1 =>  'success',
-    2 =>  'success reboot',
-    3 =>  'success restart browser',
-    4 =>  'cancelled',
-    5 =>  'error installer MSI',
-    6 =>  'error installer other',
-    7 =>  'noupdate',
-    8 =>  'error installer system',
-    9 =>  'update deferred',
-    10 => 'handoff error'
+    0 => 'error',
+    1 => 'success',
+    2 => 'success reboot',
+    3 => 'success restart browser',
+    4 => 'cancelled',
+    5 => 'error installer MSI',
+    6 => 'error installer other',
+    7 => 'noupdate',
+    8 => 'error installer system',
+    9 => 'update deferred',
+    10 => 'handoff error',
   }.freeze
 
   def self.event_description(id)

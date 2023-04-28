@@ -6,14 +6,20 @@ inherit_from: .rubocop_todo.yml
 
 AllCops:
   TargetRubyVersion: '2.7'
+  Exclude:
+    - 'test/**/*'
+    - 'vendor/**/*'
 
 Layout/LineLength:
   Enabled: false
 
-Lint/AmbiguousBlockAssociation:
+Layout/EmptyLineAfterGuardClause:
   Enabled: false
 
-Lint/BinaryOperatorWithIdenticalOperands:
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+
+Lint/ToJSON:
   Enabled: false
 
 Metrics/AbcSize:
@@ -34,8 +40,8 @@ Metrics/PerceivedComplexity:
 Naming/MethodParameterName:
   Enabled: false
 
-Style/CaseEquality:
-  Enables: false
+Style/ClassAndModuleChildren:
+  Enabled: false
 
 Style/Documentation:
   Enabled: false
@@ -56,4 +62,16 @@ Style/MixinUsage:
   Enabled: false
 
 Style/MultilineBlockChain:
+  Enabled: false
+
+Security/Open:
+  Enabled: false
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+Performance/RegexpMatch:
   Enabled: false

@@ -15,8 +15,8 @@ module Proxy::Omaha
     load_validators :distribution_validator => ::Proxy::Omaha::PluginValidators::DistributionValidator
 
     default_settings :sync_releases => 0,
-      :contentpath => '/var/lib/foreman-proxy/omaha/content',
-      :distribution => 'coreos'
+                     :contentpath => '/var/lib/foreman-proxy/omaha/content',
+                     :distribution => 'coreos'
 
     validate_readable :contentpath
 

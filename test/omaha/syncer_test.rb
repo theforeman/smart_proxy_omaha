@@ -27,7 +27,7 @@ class SyncerTest < Test::Unit::TestCase
   end
 
   def setup
-    Proxy::Omaha::Plugin.load_test_settings({:sync_releases => 1})
+    Proxy::Omaha::Plugin.load_test_settings({ :sync_releases => 1 })
     @provider = FakeReleaseProvider.new
     @syncer = Proxy::Omaha::Syncer.new
     @syncer.stubs(:release_provider).returns(@provider)
