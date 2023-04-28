@@ -11,8 +11,12 @@ end
 
 group :test do
   gem 'ci_reporter_test_unit'
+  gem 'mocha'
   gem 'public_suffix'
+  gem 'rack-test'
   gem 'rake'
   gem 'smart_proxy', git: 'https://github.com/theforeman/smart-proxy.git', branch: 'develop'
+  gem 'test-unit'
   gem 'test_xml'
+  gem 'webmock'
 end
