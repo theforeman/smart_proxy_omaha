@@ -5,7 +5,7 @@ require:
 inherit_from: .rubocop_todo.yml
 
 AllCops:
-  TargetRubyVersion: '2.5'
+  TargetRubyVersion: '2.7'
 
 Layout/LineLength:
   Enabled: false
@@ -19,25 +19,20 @@ Lint/BinaryOperatorWithIdenticalOperands:
 Metrics/AbcSize:
   Enabled: false
 
-# Configuration parameters: CountComments, CountAsOne.
 Metrics/ClassLength:
   Enabled: false
 
-# Configuration parameters: IgnoredMethods.
 Metrics/CyclomaticComplexity:
   Enabled: false
 
-# Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
 Metrics/MethodLength:
   Enabled: false
 
-# Configuration parameters: IgnoredMethods.
 Metrics/PerceivedComplexity:
   Enabled: false
 
 Naming/MethodParameterName:
   Enabled: false
-
 
 Style/CaseEquality:
   Enables: false
@@ -62,4 +57,3 @@ Style/MixinUsage:
 
 Style/MultilineBlockChain:
   Enabled: false
-
