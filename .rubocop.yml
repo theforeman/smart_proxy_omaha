@@ -1,0 +1,59 @@
+require:
+  - rubocop-performance
+  - rubocop-rake
+
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  TargetRubyVersion: '2.7'
+
+Layout/LineLength:
+  Enabled: false
+
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
+
+Lint/BinaryOperatorWithIdenticalOperands:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Naming/MethodParameterName:
+  Enabled: false
+
+Style/CaseEquality:
+  Enables: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/ClassVars:
+  Enabled: false
+
+Style/CaseEquality:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: false
+
+Style/HashSyntax:
+  Enabled: false
+
+Style/MixinUsage:
+  Enabled: false
+
+Style/MultilineBlockChain:
+  Enabled: false

@@ -1,5 +1,6 @@
+# frozen_string_literal: true
+
 require 'test/unit'
-require 'mocha/setup'
 require 'webmock/test_unit'
 require 'mocha/test_unit'
 require 'rack/test'

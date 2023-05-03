@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 require 'smart_proxy_omaha/track'
 
 class TrackTest < Test::Unit::TestCase
-
   def test_valid
     assert_equal true, Proxy::Omaha::Track.valid?('alpha')
   end

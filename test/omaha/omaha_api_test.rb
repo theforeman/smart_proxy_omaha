@@ -1,4 +1,6 @@
 require 'test_helper'
+require 'fileutils'
+require 'tmpdir'
 require 'smart_proxy_omaha/configuration_loader'
 require 'smart_proxy_omaha/omaha_plugin'
 require 'smart_proxy_omaha/distribution'
@@ -94,6 +96,12 @@ class OmahaApiTest < Test::Unit::TestCase
 
   def setup
     TestForemanClient.clear_requests
+    @contentpath = Dir.mktmpdir
+    Proxy::Omaha::Plugin.load_test_settings(contentpath: @contentpath)
+  end
+
+  def teardown
+    FileUtils.rm_rf(@contentpath)
   end
 
   def test_processes_update_complete_noupdate
