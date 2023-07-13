@@ -74,7 +74,7 @@ module Proxy
         end
 
         def releases(track, architecture)
-          feed_data = http_request.get("https://www.flatcar-linux.org/releases-json/releases-#{track}.json")
+          feed_data = http_request.get("https://www.flatcar.org/releases-json/releases-#{track}.json")
           json_feed = JSON.parse(feed_data)
           json_feed.select do |_, release|
             release['architectures'].include?(architecture.split('-').first)

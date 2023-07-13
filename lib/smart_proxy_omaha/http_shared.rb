@@ -35,5 +35,13 @@ module Proxy::Omaha
 
       [http, request]
     end
+
+    def get_recursive(url, opts = {}, limit = 10)
+      http, request = connection_factory(url, opts)
+      response = http.request(request)
+      response = get_recursive(response['location'], opts, limit - 1) if response.code == '302'
+
+      response
+    end
   end
 end
