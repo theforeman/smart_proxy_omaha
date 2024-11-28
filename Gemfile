@@ -15,7 +15,7 @@ group :test do
   gem 'public_suffix'
   gem 'rack-test'
   gem 'rake'
-  gem 'smart_proxy', git: 'https://github.com/theforeman/smart-proxy.git', branch: 'develop'
+  gem 'smart_proxy', git: 'https://github.com/theforeman/smart-proxy.git', branch: ENV.fetch('SMART_PROXY_BRANCH', 'develop')
   gem 'test-unit'
   gem 'test_xml'
   gem 'webmock'
