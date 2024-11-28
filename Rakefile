@@ -1,8 +1,11 @@
 require 'rake'
 require 'rake/testtask'
+require 'rubocop/rake_task'
 
-desc 'Default: run unit tests.'
-task :default => :test
+RuboCop::RakeTask.new
+
+desc 'Default: run RuboCop and tests.'
+task :default => %i[rubocop test]
 
 desc 'Test the Foreman Proxy plugin.'
 Rake::TestTask.new(:test) do |t|
