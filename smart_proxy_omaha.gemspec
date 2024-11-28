@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/theforeman/smart_proxy_omaha'
   s.license = 'GPL-3.0-only'
 
-  s.add_dependency('nokogiri', '>= 1.5.11')
+  s.add_dependency('nokogiri', '~> 1.6')
 
   s.required_ruby_version = '>= 2.7', '< 4'
 end
